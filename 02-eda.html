@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exploratory Data Analysis — Learn by Doing | MokshPath</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--orange:#E87A2E;--orange-dark:#D06A20;--orange-light:#F5943E;--orange-glow:rgba(232,122,46,0.12);--navy:#2B2D42;--navy-dark:#1A1B2E;--bg:#F3EDE7;--bg-card:#FFFFFF;--bg-light:#F9F5F0;--text-primary:#2B2D42;--text-secondary:#6B6D7B;--text-muted:#9597A6;--border:#E5DDD4;--green:#4CAF50;--green-light:#E8F5E9;--blue:#3B82F6;--shadow-sm:0 2px 8px rgba(43,45,66,0.06);--shadow-md:0 8px 24px rgba(43,45,66,0.08);--radius:14px;--radius-sm:8px}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text-primary);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.55}
+.nav{position:sticky;top:0;z-index:100;background:var(--bg-card);border-bottom:1px solid var(--border);padding:.6rem 2rem;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-sm)}
+.nav-title{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--navy)}
+.nav-title span{color:var(--orange)}
+.nav-logo{height:54px;width:auto}
+.hero{padding:3.5rem 2rem 2.5rem;max-width:1100px;margin:0 auto;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem 1rem;border-radius:50px;background:var(--orange-glow);color:var(--orange);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.2rem}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--orange);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,3rem);line-height:1.15;color:var(--navy);margin-bottom:1rem}
+.hero h1 em{font-style:normal;color:var(--orange)}
+.hero p{font-size:1.05rem;color:var(--text-secondary);max-width:680px;margin:0 auto;line-height:1.65}
+.case-banner{max-width:1100px;margin:1rem auto 0;padding:1.4rem 1.8rem;background:linear-gradient(135deg,var(--navy-dark),var(--navy));border-radius:var(--radius);color:#fff;display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
+.case-banner .case-icon{width:54px;height:54px;border-radius:12px;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0}
+.case-banner h3{font-family:'DM Serif Display',serif;font-size:1.25rem;margin-bottom:.2rem}
+.case-banner p{font-size:.85rem;color:rgba(255,255,255,0.75);line-height:1.55}
+section.module{max-width:1100px;margin:2.5rem auto;padding:0 2rem}
+.module-card{background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--border);padding:2rem;box-shadow:var(--shadow-sm)}
+.module-head{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.module-num{width:42px;height:42px;border-radius:10px;background:var(--orange-glow);color:var(--orange);display:flex;align-items:center;justify-content:center;font-weight:800;font-family:'DM Serif Display',serif;font-size:1.2rem;flex-shrink:0}
+.module-title{font-family:'DM Serif Display',serif;font-size:1.55rem;color:var(--navy);line-height:1.2}
+.module-intro{font-size:.95rem;color:var(--text-secondary);margin-bottom:1.4rem;line-height:1.65}
+.analogy{background:var(--bg-light);border-left:3px solid var(--orange);padding:.9rem 1.1rem;border-radius:var(--radius-sm);margin-bottom:1.4rem;font-size:.88rem;line-height:1.6}
+.analogy strong{color:var(--orange)}
+.playground{background:var(--bg-light);border-radius:var(--radius-sm);padding:1.4rem;border:1px solid var(--border);margin-bottom:1rem}
+.play-label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:.8rem;display:flex;align-items:center;gap:.4rem}
+.controls{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1rem;align-items:center}
+.controls label{font-size:.8rem;font-weight:600;color:var(--navy);margin-right:.3rem}
+.controls select,.controls input[type=range]{padding:.5rem .8rem;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.82rem;background:#fff;color:var(--navy);cursor:pointer;outline:none}
+.controls input[type=range]{padding:0;width:180px}
+.controls select:focus{border-color:var(--orange)}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:8px;font-family:inherit;font-size:.82rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;background:var(--orange);color:#fff}
+.btn:hover{background:var(--orange-dark);transform:translateY(-1px);box-shadow:0 4px 14px rgba(232,122,46,0.3)}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--navy)}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange)}
+.insight{margin-top:1rem;padding:.9rem 1.1rem;background:#FFF6E8;border-radius:var(--radius-sm);border:1px solid #F5D9B5;font-size:.85rem;color:var(--navy);line-height:1.6}
+.insight strong{color:var(--orange-dark)}
+.chart-wrap{background:#fff;border-radius:var(--radius-sm);padding:1rem;border:1px solid var(--border);margin-bottom:.6rem}
+.chart-wrap svg{display:block;width:100%;height:auto}
+.value-display{display:inline-block;min-width:50px;padding:.2rem .55rem;background:var(--orange);color:#fff;border-radius:6px;font-weight:700;font-size:.82rem;text-align:center;margin-left:.3rem}
+.tooltip{position:absolute;background:var(--navy-dark);color:#fff;padding:.5rem .75rem;border-radius:6px;font-size:.78rem;pointer-events:none;opacity:0;transition:opacity .15s;z-index:50;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
+.tooltip.show{opacity:1}
+.legend{display:flex;flex-wrap:wrap;gap:.8rem;font-size:.78rem;color:var(--text-secondary);margin-top:.5rem;justify-content:center}
+.legend-item{display:flex;align-items:center;gap:.4rem}
+.legend-swatch{width:14px;height:14px;border-radius:3px}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:680px){.compare-grid{grid-template-columns:1fr}}
+.mini-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;text-align:center}
+.mini-card h6{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-weight:700;margin-bottom:.3rem}
+.mini-card .v{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--navy)}
+.mini-card .sub{font-size:.72rem;color:var(--text-secondary);margin-top:.15rem}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.6rem;margin:1rem 0}
+.quiz{background:linear-gradient(135deg,var(--navy-dark),var(--navy));color:#fff;border-radius:var(--radius);padding:1.8rem;margin-top:1.2rem}
+.quiz h4{font-family:'DM Serif Display',serif;font-size:1.15rem;margin-bottom:.4rem;color:var(--orange-light)}
+.quiz p{font-size:.88rem;color:rgba(255,255,255,0.8);margin-bottom:1rem}
+.quiz-opts{display:flex;flex-direction:column;gap:.5rem}
+.quiz-opt{padding:.7rem 1rem;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:inherit;font-size:.85rem;cursor:pointer;text-align:left;transition:all .2s}
+.quiz-opt:hover{border-color:var(--orange);background:rgba(232,122,46,0.15)}
+.quiz-opt.correct{background:rgba(76,175,80,0.2);border-color:var(--green)}
+.quiz-opt.wrong{background:rgba(220,80,80,0.2);border-color:#DC5050}
+.quiz-feedback{margin-top:.8rem;font-size:.85rem;line-height:1.55;display:none}
+.quiz-feedback.show{display:block}
+.summary{background:linear-gradient(135deg,#fff,var(--bg-light));border:2px solid var(--orange);border-radius:var(--radius);padding:2rem;margin:3rem auto;max-width:1100px}
+.summary h3{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--navy);margin-bottom:.8rem}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1rem}
+.summary-item{padding:1rem;background:#fff;border-radius:var(--radius-sm);border:1px solid var(--border)}
+.summary-item h5{font-size:.85rem;font-weight:700;color:var(--orange);margin-bottom:.3rem}
+.summary-item p{font-size:.78rem;color:var(--text-secondary);line-height:1.55}
+footer{padding:2rem;text-align:center;font-size:.78rem;color:var(--text-muted);border-top:1px solid var(--border);margin-top:3rem;background:var(--bg-card)}
+.scrollx{overflow-x:auto}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-title">Exploratory Data <span>Analysis</span> — Lesson 02</div>
+  <img src="hero.svg" alt="MokshPath" class="nav-logo">
+</nav>
+
+<section class="hero">
+  <div class="hero-badge"><span class="dot"></span> No-Code Interactive Lesson</div>
+  <h1>Make data <em>tell</em> you what's inside before you model it</h1>
+  <p>EDA is what every great analyst does <em>before</em> running a single algorithm: look at the data, find its shape, spot the weird stuff. By the end of this lesson you'll know how to read a histogram, a boxplot, and a correlation matrix the way a doctor reads an X-ray.</p>
+</section>
+
+<div class="case-banner">
+  <div class="case-icon">🏃</div>
+  <div>
+    <h3>The Case: "FitPath" — 500 users, one big question</h3>
+    <p>A fitness app team wants to know: <em>"Why are some users churning?"</em> Before building a fancy churn model, you'll inspect their data — daily steps, sleep, workout minutes, calories, age — and let the patterns surface themselves. This is exactly how real data scientists open a new dataset.</p>
+  </div>
+</div>
+
+<!-- MODULE 1: Distributions -->
+<section class="module">
+<div class="module-card">
+  <div class="module-head">
+    <div class="module-num">1</div>
+    <div class="module-title">Distributions — the "shape" of a column</div>
+  </div>
+  <p class="module-intro">Every numeric column has a personality: some are tightly bunched (most users sleep ~7 hours), some are spread (income often is), some have weird humps (two types of users hiding in one column). Distribution is the word for that personality. Knowing it changes how you analyse, summarise, and even what model you choose.</p>
+  <div class="analogy"><strong>Analogy:</strong> If columns are people, the distribution is their shape — tall and narrow (concentrated), short and wide (spread out), or hunchbacked (two groups in disguise).</div>
+
+  <div class="playground">
+    <div class="play-label">▶ Try it — Compare four shapes that show up everywhere</div>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:.8rem">Pick a column from the FitPath data. Watch the curve change. Notice how the <em>mean</em> (average) and <em>median</em> (middle value) can disagree — and what that disagreement reveals.</p>
+    <div class="controls">
+      <label>Column</label>
+      <select id="dist-col" onchange="drawDist()">
+        <option value="sleep">Sleep hours — bell-shaped</option>
+        <option value="steps">Daily steps — right-skewed</option>
+        <option value="income">Monthly subscription tier — multi-modal</option>
+        <option value="age">User age — uniform-ish</option>
+      </select>
+    </div>
+    <div class="chart-wrap"><svg id="dist-svg" viewBox="0 0 720 280"></svg></div>
+    <div class="stats-row">
+      <div class="mini-card"><h6>Mean</h6><div class="v" id="dist-mean">—</div><div class="sub">simple average</div></div>
+      <div class="mini-card"><h6>Median</h6><div class="v" id="dist-median">—</div><div class="sub">the middle value</div></div>
+      <div class="mini-card"><h6>Std Dev</h6><div class="v" id="dist-std">—</div><div class="sub">how spread out</div></div>
+      <div class="mini-card"><h6>Shape</h6><div class="v" id="dist-shape" style="font-size:1rem">—</div><div class="sub">at a glance</div></div>
+    </div>
+    <div class="insight" id="dist-insight"><strong>What to notice:</strong> When mean ≠ median, the distribution is skewed — averages will mislead you. Always look at the shape before quoting an "average".</div>
+  </div>
+</div>
+</section>
+
+<!-- MODULE 2: Histograms -->
+<section class="module">
+<div class="module-card">
+  <div class="module-head">
+    <div class="module-num">2</div>
+    <div class="module-title">Histograms — counting friends in each height bracket</div>
+  </div>
+  <p class="module-intro">A histogram chops a numeric column into buckets ("bins") and counts how many rows fall into each. Easy to read, but there's a trap: <em>too few bins</em> hide the shape, <em>too many bins</em> show only noise. The right bin width is a craft, not a setting.</p>
+  <div class="analogy"><strong>Analogy:</strong> You're sorting jellybeans by weight into cups. Use 3 huge cups → you'll lose detail. Use 100 tiny cups → most will be empty and you can't see the pattern. The sweet spot is where the story emerges.</div>
+
+  <div class="playground">
+    <div class="play-label">▶ Try it — Slide the bin count and watch the story change</div>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:.8rem">This is FitPath users' weekly workout minutes. Slide the bins. At 5 bins you'll see "people work out somewhere between 0 and 600 min." At 50 you'll see the actual pattern: <em>two groups</em> — casual users (~50 min) and serious users (~300 min). The same column tells different stories.</p>
+    <div class="controls">
+      <label>Bins</label>
+      <input type="range" id="hist-bins" min="3" max="50" value="15" oninput="drawHist()">
+      <span class="value-display" id="hist-binval">15</span>
+    </div>
+    <div class="chart-wrap"><svg id="hist-svg" viewBox="0 0 720 280"></svg></div>
+    <div class="insight" id="hist-insight"><strong>Read this carefully:</strong> The bumps you see in the middle bin counts represent <em>real groups of users</em> with different behaviours. If you'd only used 5 bins, you would have missed them and recommended a single workout-time strategy for everyone.</div>
+  </div>
+</div>
+</section>
+
+<!-- MODULE 3: Boxplots -->
+<section class="module">
+<div class="module-card">
+  <div class="module-head">
+    <div class="module-num">3</div>
+    <div class="module-title">Boxplots — the X-ray of a column</div>
+  </div>
+  <p class="module-intro">Boxplots compress a whole distribution into one tiny diagram: the middle box is where the typical half of your data lives, the line inside is the median, the whiskers show the rest, and any lonely dots are <em>outliers</em> — values so far from normal that they deserve a second look. Once you can read one, you can compare 10 groups side-by-side at a glance.</p>
+  <div class="analogy"><strong>Analogy:</strong> A boxplot is like a class photo line-up sorted by height — you instantly see who's average, who's tall, who's short, and the one kid standing on a chair to look taller (the outlier).</div>
+
+  <div class="playground">
+    <div class="play-label">▶ Try it — Compare workout minutes across user segments</div>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:.8rem">Hover the boxes. Each box is one segment of users (Free, Basic, Premium, Elite). Where's the median highest? Which segment has wild outliers? This is how product managers identify "power users" worth retaining.</p>
+    <div class="chart-wrap" style="position:relative">
+      <svg id="box-svg" viewBox="0 0 720 320"></svg>
+      <div class="tooltip" id="box-tip"></div>
+    </div>
+    <div class="insight"><strong>What boxplots reveal:</strong> Elite users have the highest median <em>and</em> tightest box — they're consistently active. Free users have a long bottom whisker — many barely use the app. Outliers above Premium might be Elite-tier users on the wrong plan (a growth opportunity).</div>
+  </div>
+</div>
+</section>
+
+<!-- MODULE 4: Correlation matrix -->
+<section class="module">
+<div class="module-card">
+  <div class="module-head">
+    <div class="module-num">4</div>
+    <div class="module-title">Correlation matrix — which columns move together?</div>
+  </div>
+  <p class="module-intro">Correlation answers a simple question: when column A goes up, does column B tend to go up too? It runs from −1 (perfectly opposite) through 0 (no relationship) to +1 (perfectly together). A correlation matrix shows this for every pair of columns at once — a single grid that maps the "internal politics" of your dataset.</p>
+  <div class="analogy"><strong>Analogy:</strong> Imagine your dataset's columns are colleagues. Correlation tells you which ones always show up at the same meetings. Strong positive = best friends. Strong negative = sworn rivals. Near zero = they don't even know each other.</div>
+
+  <div class="playground">
+    <div class="play-label">▶ Try it — Hover the grid for plain-English readings</div>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:.8rem">Each cell shows how strongly two FitPath columns relate. Dark orange = strong positive. Dark navy = strong negative. White-ish = no real link. <strong>Important warning:</strong> correlation ≠ causation. We'll see why below.</p>
+    <div class="chart-wrap" style="position:relative">
+      <svg id="corr-svg" viewBox="0 0 720 360"></svg>
+      <div class="tooltip" id="corr-tip"></div>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-swatch" style="background:#1a3a8a"></div>Strong negative (−1)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#dddddd"></div>No correlation (0)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#E87A2E"></div>Strong positive (+1)</div>
+    </div>
+    <div class="insight"><strong>Spurious correlations:</strong> Notice "App opens" and "Workout minutes" correlate 0.78. Causal? Probably — people who open the app actually work out. But "Sleep hours" and "Calorie intake" correlate 0.40 too. Does sleeping <em>make</em> you eat more? Or do older users (a third variable) both sleep more and eat more? Correlation flags the question. Causation needs a test.</div>
+  </div>
+</div>
+</section>
+
+<!-- MODULE 5: Pair plots -->
+<section class="module">
+<div class="module-card">
+  <div class="module-head">
+    <div class="module-num">5</div>
+    <div class="module-title">Pair plots — every scatter, all at once</div>
+  </div>
+  <p class="module-intro">A pair plot is a grid of mini scatter plots: one for every pair of numeric columns. It's the fastest possible "scan the dataset" tool — clusters, outliers, curves, and segments all show up at a glance. Data scientists run this on every new dataset before doing anything else.</p>
+  <div class="analogy"><strong>Analogy:</strong> A pair plot is the contact sheet a photographer prints before deciding which photo to enlarge. Tiny thumbnails of every pairing — you scan the whole roll, then zoom into the interesting ones.</div>
+
+  <div class="playground">
+    <div class="play-label">▶ Try it — Colour by user segment, scan for patterns</div>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:.8rem">Each tiny plot shows one pair of columns. Dots are users. Colour by their segment — if the colours <em>separate</em> in a plot, that pair of columns is great for predicting segment. If colours overlap completely, those columns won't help.</p>
+    <div class="controls">
+      <label>Colour by</label>
+      <select id="pair-color" onchange="drawPair()">
+        <option value="segment">User segment</option>
+        <option value="churned">Churned vs Active</option>
+        <option value="none">No colour</option>
+      </select>
+    </div>
+    <div class="chart-wrap"><svg id="pair-svg" viewBox="0 0 720 540"></svg></div>
+    <div class="legend" id="pair-legend"></div>
+    <div class="insight"><strong>What to look for:</strong> When colouring by churn, the (Workout-min, App-opens) plot in the top-right shows clear separation — churned users cluster in the bottom-left (low activity). That's a strong early signal — you've already done feature selection without writing a single line of code.</div>
+  </div>
+</div>
+</section>
+
+<!-- QUIZ -->
+<section class="module">
+<div class="quiz">
+  <h4>🎯 You're given a salary column. The mean is ₹85,000 and the median is ₹52,000. What's likely going on?</h4>
+  <div class="quiz-opts">
+    <button class="quiz-opt" data-correct="0">The data is symmetric — mean and median are usually close</button>
+    <button class="quiz-opt" data-correct="1">The distribution is right-skewed — a few very high salaries are dragging the mean up</button>
+    <button class="quiz-opt" data-correct="0">There's a data-entry error — one of them must be wrong</button>
+    <button class="quiz-opt" data-correct="0">Both numbers are equally valid summaries; doesn't matter which you report</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+</section>
+
+<div class="summary">
+  <h3>🌱 Five tools, one habit: look before you model</h3>
+  <p style="color:var(--text-secondary);font-size:.92rem">Every great analyst runs these checks before touching a model. They take minutes, save weeks, and often reveal that you don't need a model at all — the answer was hiding in the histogram.</p>
+  <div class="summary-grid">
+    <div class="summary-item"><h5>Distribution</h5><p>The personality of a column. Bell, skewed, multi-peak.</p></div>
+    <div class="summary-item"><h5>Histogram</h5><p>How many rows fall in each value range. Mind the bin count.</p></div>
+    <div class="summary-item"><h5>Boxplot</h5><p>Median, spread, outliers — perfect for comparing groups.</p></div>
+    <div class="summary-item"><h5>Correlation matrix</h5><p>Which column-pairs move together. Never assume causation.</p></div>
+    <div class="summary-item"><h5>Pair plot</h5><p>Every scatter at once — scan for clusters and separation.</p></div>
+  </div>
+</div>
+
+<footer>Built for MokshPath learners · Lesson 02 of the Accelerated AI Program</footer>
+
+<script>
+/* ─────────── Synthetic FitPath dataset ─────────── */
+function seed(s){return ()=>{s=(s*9301+49297)%233280; return s/233280;}}
+const rnd=seed(42);
+function gauss(mu,sd){let u=0,v=0; while(u===0)u=rnd(); while(v===0)v=rnd(); return mu+sd*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+
+const N=500;
+const users=[];
+for(let i=0;i<N;i++){
+  const seg=['Free','Basic','Premium','Elite'][i%4 + (rnd()>0.5?0:0)];
+  const segIdx=['Free','Basic','Premium','Elite'].indexOf(seg);
+  const age=Math.max(18,Math.min(70,Math.round(gauss(34,12))));
+  const sleep=Math.max(3,Math.min(11,+gauss(7,1).toFixed(1)));
+  // bimodal workout minutes
+  const isSerious=rnd()<(0.15+segIdx*0.18);
+  const workoutMin=Math.max(0,Math.round(isSerious?gauss(300,60):gauss(50,30)));
+  const steps=Math.max(500,Math.round(workoutMin*25 + gauss(2000,1500)));
+  const calories=Math.max(1200,Math.round(1500+age*5+workoutMin*1.2+gauss(0,200)));
+  const appOpens=Math.max(1,Math.round(workoutMin/30 + gauss(8,4)));
+  const tier=segIdx; // 0..3
+  const churned=(workoutMin<60 && appOpens<5)?1:(rnd()<0.05?1:0);
+  users.push({age,sleep,workoutMin,steps,calories,appOpens,tier,seg,churned});
+}
+
+/* ─────────── MODULE 1: Distribution ─────────── */
+function drawDist(){
+  const col=document.getElementById('dist-col').value;
+  let data;
+  if(col==='sleep') data=users.map(u=>u.sleep);
+  else if(col==='steps') data=users.map(u=>u.steps);
+  else if(col==='income') data=users.map(u=>u.tier===0?299:u.tier===1?599:u.tier===2?1299:2499);
+  else data=users.map(u=>u.age);
+  const min=Math.min(...data), max=Math.max(...data);
+  const bins=20;
+  const bw=(max-min)/bins;
+  const counts=new Array(bins).fill(0);
+  data.forEach(v=>{const i=Math.min(bins-1,Math.floor((v-min)/bw)); counts[i]++;});
+  const maxC=Math.max(...counts);
+  const svg=document.getElementById('dist-svg');
+  const W=720,H=280, padL=50,padR=20,padT=20,padB=40;
+  const cw=(W-padL-padR)/bins;
+  let html='';
+  // axes
+  html+=`<line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#9597A6" stroke-width="1"/>`;
+  html+=`<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${H-padB}" stroke="#9597A6" stroke-width="1"/>`;
+  // bars
+  counts.forEach((c,i)=>{
+    const h=(c/maxC)*(H-padT-padB);
+    const x=padL+i*cw;
+    const y=H-padB-h;
+    html+=`<rect x="${x+1}" y="${y}" width="${cw-2}" height="${h}" fill="url(#g1)" rx="2"/>`;
+  });
+  // mean & median lines
+  const mean=data.reduce((a,b)=>a+b,0)/data.length;
+  const sorted=[...data].sort((a,b)=>a-b);
+  const median=sorted[Math.floor(sorted.length/2)];
+  const std=Math.sqrt(data.reduce((a,b)=>a+(b-mean)**2,0)/data.length);
+  const mx=padL+((mean-min)/(max-min))*(W-padL-padR);
+  const medx=padL+((median-min)/(max-min))*(W-padL-padR);
+  html+=`<line x1="${mx}" y1="${padT}" x2="${mx}" y2="${H-padB}" stroke="#E87A2E" stroke-width="2" stroke-dasharray="5,3"/>`;
+  html+=`<text x="${mx+5}" y="${padT+12}" fill="#E87A2E" font-size="11" font-weight="700">mean</text>`;
+  html+=`<line x1="${medx}" y1="${padT}" x2="${medx}" y2="${H-padB}" stroke="#2B2D42" stroke-width="2" stroke-dasharray="2,3"/>`;
+  html+=`<text x="${medx+5}" y="${padT+26}" fill="#2B2D42" font-size="11" font-weight="700">median</text>`;
+  // x labels
+  for(let i=0;i<=4;i++){
+    const v=min+(max-min)*i/4;
+    const x=padL+(i/4)*(W-padL-padR);
+    html+=`<text x="${x}" y="${H-padB+18}" fill="#6B6D7B" font-size="11" text-anchor="middle">${col==='income'?'₹'+Math.round(v):v.toFixed(col==='sleep'?1:0)}</text>`;
+  }
+  html+=`<defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F5943E"/><stop offset="1" stop-color="#E87A2E"/></linearGradient></defs>`;
+  svg.innerHTML=html;
+  document.getElementById('dist-mean').textContent=col==='sleep'?mean.toFixed(1):Math.round(mean);
+  document.getElementById('dist-median').textContent=col==='sleep'?median.toFixed(1):Math.round(median);
+  document.getElementById('dist-std').textContent=col==='sleep'?std.toFixed(1):Math.round(std);
+  let shape, msg;
+  if(col==='sleep'){shape='Bell'; msg='Symmetric — mean ≈ median. Most users cluster around the average. Mean is a fair summary.';}
+  else if(col==='steps'){shape='Right-skewed'; msg='A long tail of high-step users pulls the mean above the median. Reporting just the mean would overstate "typical" behaviour.';}
+  else if(col==='income'){shape='Multi-modal'; msg='Distinct peaks at each subscription tier. The "average price" hides the truth: users belong to discrete groups.';}
+  else{shape='Uniform-ish'; msg='No single peak — ages spread widely. Mean and median are similar but neither captures the full picture.';}
+  document.getElementById('dist-shape').textContent=shape;
+  document.getElementById('dist-insight').innerHTML='<strong>What to notice:</strong> '+msg;
+}
+
+/* ─────────── MODULE 2: Histogram with adjustable bins ─────────── */
+function drawHist(){
+  const bins=+document.getElementById('hist-bins').value;
+  document.getElementById('hist-binval').textContent=bins;
+  const data=users.map(u=>u.workoutMin);
+  const min=0, max=Math.max(...data);
+  const bw=(max-min)/bins;
+  const counts=new Array(bins).fill(0);
+  data.forEach(v=>{const i=Math.min(bins-1,Math.floor((v-min)/bw)); counts[i]++;});
+  const maxC=Math.max(...counts);
+  const svg=document.getElementById('hist-svg');
+  const W=720,H=280, padL=50,padR=20,padT=20,padB=40;
+  const cw=(W-padL-padR)/bins;
+  let html='';
+  html+=`<line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#9597A6" stroke-width="1"/>`;
+  html+=`<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${H-padB}" stroke="#9597A6" stroke-width="1"/>`;
+  counts.forEach((c,i)=>{
+    const h=(c/maxC)*(H-padT-padB);
+    const x=padL+i*cw;
+    const y=H-padB-h;
+    html+=`<rect x="${x+1}" y="${y}" width="${Math.max(1,cw-2)}" height="${h}" fill="#E87A2E" rx="2"><title>${Math.round(min+i*bw)}–${Math.round(min+(i+1)*bw)} min: ${c} users</title></rect>`;
+  });
+  for(let i=0;i<=6;i++){
+    const v=min+(max-min)*i/6;
+    const x=padL+(i/6)*(W-padL-padR);
+    html+=`<text x="${x}" y="${H-padB+18}" fill="#6B6D7B" font-size="11" text-anchor="middle">${Math.round(v)}m</text>`;
+  }
+  html+=`<text x="${W/2}" y="${H-5}" fill="#6B6D7B" font-size="11" text-anchor="middle" font-weight="600">Weekly workout minutes</text>`;
+  svg.innerHTML=html;
+  let msg;
+  if(bins<=6) msg='With only '+bins+' bins, the graph looks like one big blob — you might conclude "users work out 0–600 minutes." That\'s technically true and totally useless.';
+  else if(bins<=20) msg='Two distinct humps appear: a tall one at low minutes (casual users) and a shorter one at high minutes (serious users). This bimodal pattern is the real story — and it would have stayed hidden at 5 bins.';
+  else msg='With '+bins+' bins, the histogram gets jagged — you\'re seeing random noise, not signal. The two-hump structure starts to blur.';
+  document.getElementById('hist-insight').innerHTML='<strong>Read this carefully:</strong> '+msg;
+}
+
+/* ─────────── MODULE 3: Boxplots ─────────── */
+function drawBox(){
+  const segs=['Free','Basic','Premium','Elite'];
+  const groups=segs.map(s=>users.filter(u=>u.seg===s).map(u=>u.workoutMin).sort((a,b)=>a-b));
+  const svg=document.getElementById('box-svg');
+  const W=720,H=320, padL=60,padR=30,padT=20,padB=50;
+  const max=Math.max(...users.map(u=>u.workoutMin))*1.05;
+  const min=0;
+  const groupW=(W-padL-padR)/segs.length;
+  let html='';
+  html+=`<line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#9597A6"/>`;
+  html+=`<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${H-padB}" stroke="#9597A6"/>`;
+  for(let i=0;i<=5;i++){
+    const v=min+(max-min)*i/5;
+    const y=H-padB-(i/5)*(H-padT-padB);
+    html+=`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#E5DDD4" stroke-dasharray="2,3"/>`;
+    html+=`<text x="${padL-8}" y="${y+4}" fill="#6B6D7B" font-size="11" text-anchor="end">${Math.round(v)}</text>`;
+  }
+  const colors=['#9597A6','#F5943E','#E87A2E','#D06A20'];
+  groups.forEach((g,i)=>{
+    if(!g.length) return;
+    const q1=g[Math.floor(g.length*0.25)];
+    const med=g[Math.floor(g.length*0.5)];
+    const q3=g[Math.floor(g.length*0.75)];
+    const iqr=q3-q1;
+    const lo=Math.max(g[0],q1-1.5*iqr);
+    const hi=Math.min(g[g.length-1],q3+1.5*iqr);
+    const outs=g.filter(v=>v<lo||v>hi);
+    const cx=padL+groupW*i+groupW/2;
+    const bw=Math.min(80,groupW*0.5);
+    const yF=v=>H-padB-((v-min)/(max-min))*(H-padT-padB);
+    // whiskers
+    html+=`<line x1="${cx}" y1="${yF(lo)}" x2="${cx}" y2="${yF(q1)}" stroke="${colors[i]}" stroke-width="2"/>`;
+    html+=`<line x1="${cx}" y1="${yF(q3)}" x2="${cx}" y2="${yF(hi)}" stroke="${colors[i]}" stroke-width="2"/>`;
+    html+=`<line x1="${cx-15}" y1="${yF(lo)}" x2="${cx+15}" y2="${yF(lo)}" stroke="${colors[i]}" stroke-width="2"/>`;
+    html+=`<line x1="${cx-15}" y1="${yF(hi)}" x2="${cx+15}" y2="${yF(hi)}" stroke="${colors[i]}" stroke-width="2"/>`;
+    // box
+    html+=`<rect class="box-rect" data-seg="${segs[i]}" data-q1="${q1}" data-med="${med}" data-q3="${q3}" data-out="${outs.length}" x="${cx-bw/2}" y="${yF(q3)}" width="${bw}" height="${yF(q1)-yF(q3)}" fill="${colors[i]}" fill-opacity="0.25" stroke="${colors[i]}" stroke-width="2" rx="3" style="cursor:pointer"/>`;
+    // median
+    html+=`<line x1="${cx-bw/2}" y1="${yF(med)}" x2="${cx+bw/2}" y2="${yF(med)}" stroke="${colors[i]}" stroke-width="3"/>`;
+    // outliers
+    outs.forEach(o=>{html+=`<circle cx="${cx}" cy="${yF(o)}" r="3" fill="${colors[i]}"/>`;});
+    // label
+    html+=`<text x="${cx}" y="${H-padB+20}" fill="#2B2D42" font-size="12" font-weight="600" text-anchor="middle">${segs[i]}</text>`;
+    html+=`<text x="${cx}" y="${H-padB+34}" fill="#6B6D7B" font-size="10" text-anchor="middle">${g.length} users</text>`;
+  });
+  html+=`<text x="20" y="${H/2}" fill="#6B6D7B" font-size="11" text-anchor="middle" transform="rotate(-90 20 ${H/2})">Weekly workout minutes</text>`;
+  svg.innerHTML=html;
+  const tip=document.getElementById('box-tip');
+  svg.querySelectorAll('.box-rect').forEach(b=>{
+    b.addEventListener('mousemove',e=>{
+      const r=svg.getBoundingClientRect();
+      tip.style.left=(e.clientX-r.left+10)+'px';
+      tip.style.top=(e.clientY-r.top-20)+'px';
+      tip.classList.add('show');
+      tip.innerHTML=`<strong>${b.dataset.seg}</strong><br>Median: ${b.dataset.med}min<br>Q1–Q3: ${b.dataset.q1}–${b.dataset.q3}<br>Outliers: ${b.dataset.out}`;
+    });
+    b.addEventListener('mouseleave',()=>tip.classList.remove('show'));
+  });
+}
+
+/* ─────────── MODULE 4: Correlation matrix ─────────── */
+function corrCoef(a,b){
+  const ma=a.reduce((s,x)=>s+x,0)/a.length;
+  const mb=b.reduce((s,x)=>s+x,0)/b.length;
+  let num=0, da=0, db=0;
+  for(let i=0;i<a.length;i++){num+=(a[i]-ma)*(b[i]-mb); da+=(a[i]-ma)**2; db+=(b[i]-mb)**2;}
+  return num/Math.sqrt(da*db);
+}
+function drawCorr(){
+  const cols=[
+    {key:'age',label:'Age'},
+    {key:'sleep',label:'Sleep hrs'},
+    {key:'workoutMin',label:'Workout min'},
+    {key:'steps',label:'Steps'},
+    {key:'calories',label:'Calories'},
+    {key:'appOpens',label:'App opens'},
+    {key:'tier',label:'Tier'}
+  ];
+  const M=cols.map(c=>users.map(u=>u[c.key]));
+  const svg=document.getElementById('corr-svg');
+  const W=720,H=360, pad=120;
+  const cellW=(W-pad-20)/cols.length;
+  const cellH=(H-pad-20)/cols.length;
+  let html='';
+  for(let i=0;i<cols.length;i++){
+    for(let j=0;j<cols.length;j++){
+      const r=corrCoef(M[i],M[j]);
+      const x=pad+j*cellW;
+      const y=20+i*cellH;
+      let bg;
+      if(r>=0){const t=r; bg=`rgb(${255-Math.round(t*(255-232))},${255-Math.round(t*(255-122))},${255-Math.round(t*(255-46))})`;}
+      else{const t=-r; bg=`rgb(${Math.round(221-t*(221-26))},${Math.round(221-t*(221-58))},${Math.round(221-t*(221-138))})`;}
+      const txtColor=Math.abs(r)>0.5?'#fff':'#2B2D42';
+      html+=`<rect class="corr-cell" data-a="${cols[i].label}" data-b="${cols[j].label}" data-r="${r.toFixed(2)}" x="${x}" y="${y}" width="${cellW-2}" height="${cellH-2}" fill="${bg}" style="cursor:pointer"/>`;
+      html+=`<text x="${x+cellW/2}" y="${y+cellH/2+4}" fill="${txtColor}" font-size="11" font-weight="700" text-anchor="middle" pointer-events="none">${r.toFixed(2)}</text>`;
+    }
+    // row label
+    html+=`<text x="${pad-10}" y="${20+i*cellH+cellH/2+4}" fill="#2B2D42" font-size="11" font-weight="600" text-anchor="end">${cols[i].label}</text>`;
+    // col label
+    html+=`<text x="${pad+i*cellW+cellW/2}" y="${H-10}" fill="#2B2D42" font-size="10" font-weight="600" text-anchor="middle" transform="rotate(-30 ${pad+i*cellW+cellW/2} ${H-10})">${cols[i].label}</text>`;
+  }
+  svg.innerHTML=html;
+  const tip=document.getElementById('corr-tip');
+  svg.querySelectorAll('.corr-cell').forEach(c=>{
+    c.addEventListener('mousemove',e=>{
+      const r=svg.getBoundingClientRect();
+      tip.style.left=(e.clientX-r.left+10)+'px';
+      tip.style.top=(e.clientY-r.top-20)+'px';
+      tip.classList.add('show');
+      const rv=parseFloat(c.dataset.r);
+      let msg;
+      if(c.dataset.a===c.dataset.b) msg='Same column — always 1';
+      else if(Math.abs(rv)>0.7) msg=(rv>0?'Strong positive':'Strong negative')+' relationship';
+      else if(Math.abs(rv)>0.3) msg='Moderate '+(rv>0?'positive':'negative');
+      else msg='Weak / no relationship';
+      tip.innerHTML=`<strong>${c.dataset.a} ↔ ${c.dataset.b}</strong><br>r = ${c.dataset.r}<br>${msg}`;
+    });
+    c.addEventListener('mouseleave',()=>tip.classList.remove('show'));
+  });
+}
+
+/* ─────────── MODULE 5: Pair plot ─────────── */
+function drawPair(){
+  const cols=[
+    {key:'age',label:'Age'},
+    {key:'workoutMin',label:'Workout min'},
+    {key:'sleep',label:'Sleep hrs'},
+    {key:'appOpens',label:'App opens'}
+  ];
+  const colorBy=document.getElementById('pair-color').value;
+  const segColors={'Free':'#9597A6','Basic':'#F5943E','Premium':'#E87A2E','Elite':'#D06A20'};
+  const chColors={0:'#4CAF50',1:'#DC5050'};
+  const colorFn=u=>{
+    if(colorBy==='segment') return segColors[u.seg];
+    if(colorBy==='churned') return chColors[u.churned];
+    return '#E87A2E';
+  };
+  const svg=document.getElementById('pair-svg');
+  const W=720,H=540, pad=70;
+  const cellW=(W-pad-20)/cols.length;
+  const cellH=(H-pad-20)/cols.length;
+  let html='';
+  for(let i=0;i<cols.length;i++){
+    for(let j=0;j<cols.length;j++){
+      const x=pad+j*cellW;
+      const y=10+i*cellH;
+      html+=`<rect x="${x}" y="${y}" width="${cellW-4}" height="${cellH-4}" fill="#fff" stroke="#E5DDD4" rx="4"/>`;
+      if(i===j){
+        // distribution
+        const data=users.map(u=>u[cols[i].key]);
+        const min=Math.min(...data), max=Math.max(...data);
+        const bins=12;
+        const bw=(max-min)/bins;
+        const counts=new Array(bins).fill(0);
+        data.forEach(v=>{const idx=Math.min(bins-1,Math.floor((v-min)/bw)); counts[idx]++;});
+        const maxC=Math.max(...counts);
+        const innerW=cellW-14, innerH=cellH-14;
+        counts.forEach((c,b)=>{
+          const bh=(c/maxC)*innerH;
+          const bx=x+5+(b/bins)*innerW;
+          html+=`<rect x="${bx}" y="${y+cellH-5-bh}" width="${innerW/bins-1}" height="${bh}" fill="#E87A2E" fill-opacity="0.6"/>`;
+        });
+        html+=`<text x="${x+cellW/2}" y="${y+18}" fill="#2B2D42" font-size="10" font-weight="700" text-anchor="middle">${cols[i].label}</text>`;
+      } else {
+        const xData=users.map(u=>u[cols[j].key]);
+        const yData=users.map(u=>u[cols[i].key]);
+        const xMin=Math.min(...xData), xMax=Math.max(...xData);
+        const yMin=Math.min(...yData), yMax=Math.max(...yData);
+        users.forEach((u,k)=>{
+          const px=x+6+((u[cols[j].key]-xMin)/(xMax-xMin))*(cellW-14);
+          const py=y+cellH-6-((u[cols[i].key]-yMin)/(yMax-yMin))*(cellH-14);
+          html+=`<circle cx="${px}" cy="${py}" r="1.4" fill="${colorFn(u)}" fill-opacity="0.6"/>`;
+        });
+      }
+    }
+    html+=`<text x="${pad-10}" y="${10+i*cellH+cellH/2}" fill="#2B2D42" font-size="11" font-weight="600" text-anchor="end">${cols[i].label}</text>`;
+    html+=`<text x="${pad+i*cellW+cellW/2}" y="${H-10}" fill="#2B2D42" font-size="11" font-weight="600" text-anchor="middle">${cols[i].label}</text>`;
+  }
+  svg.innerHTML=html;
+  const lg=document.getElementById('pair-legend');
+  if(colorBy==='segment'){
+    lg.innerHTML=Object.entries(segColors).map(([k,v])=>`<div class="legend-item"><div class="legend-swatch" style="background:${v}"></div>${k}</div>`).join('');
+  } else if(colorBy==='churned'){
+    lg.innerHTML=`<div class="legend-item"><div class="legend-swatch" style="background:#4CAF50"></div>Active</div><div class="legend-item"><div class="legend-swatch" style="background:#DC5050"></div>Churned</div>`;
+  } else lg.innerHTML='';
+}
+
+/* ─────────── Quiz ─────────── */
+document.querySelectorAll('.quiz-opt').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.quiz-opt').forEach(b=>b.classList.remove('correct','wrong'));
+    const correct=btn.dataset.correct==='1';
+    btn.classList.add(correct?'correct':'wrong');
+    const fb=document.getElementById('qf'); fb.classList.add('show');
+    fb.innerHTML=correct
+      ? '✅ <strong>Exactly.</strong> When mean ≫ median, expect a right-skewed distribution — a small number of very high values pulling the average up. The median is the safer "typical" number to report.'
+      : '❌ Look again. Mean ₹85k vs median ₹52k is a big gap — that gap is the fingerprint of a skewed distribution. The median is robust to extreme values; the mean is not.';
+  });
+});
+
+/* init */
+drawDist();
+drawHist();
+drawBox();
+drawCorr();
+drawPair();
+</script>
+
+</body>
+</html>

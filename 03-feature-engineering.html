@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feature Engineering — Learn by Doing | MokshPath</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--orange:#E87A2E;--orange-dark:#D06A20;--orange-light:#F5943E;--orange-glow:rgba(232,122,46,0.12);--navy:#2B2D42;--navy-dark:#1A1B2E;--bg:#F3EDE7;--bg-card:#FFFFFF;--bg-light:#F9F5F0;--text-primary:#2B2D42;--text-secondary:#6B6D7B;--text-muted:#9597A6;--border:#E5DDD4;--green:#4CAF50;--green-light:#E8F5E9;--shadow-sm:0 2px 8px rgba(43,45,66,0.06);--shadow-md:0 8px 24px rgba(43,45,66,0.08);--radius:14px;--radius-sm:8px}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text-primary);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.55}
+.nav{position:sticky;top:0;z-index:100;background:var(--bg-card);border-bottom:1px solid var(--border);padding:.6rem 2rem;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-sm)}
+.nav-title{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--navy)}
+.nav-title span{color:var(--orange)}
+.nav-logo{height:54px;width:auto}
+.hero{padding:3.5rem 2rem 2.5rem;max-width:1100px;margin:0 auto;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem 1rem;border-radius:50px;background:var(--orange-glow);color:var(--orange);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.2rem}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--orange);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,3rem);line-height:1.15;color:var(--navy);margin-bottom:1rem}
+.hero h1 em{font-style:normal;color:var(--orange)}
+.hero p{font-size:1.05rem;color:var(--text-secondary);max-width:680px;margin:0 auto;line-height:1.65}
+.case-banner{max-width:1100px;margin:1rem auto 0;padding:1.4rem 1.8rem;background:linear-gradient(135deg,var(--navy-dark),var(--navy));border-radius:var(--radius);color:#fff;display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
+.case-banner .case-icon{width:54px;height:54px;border-radius:12px;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0}
+.case-banner h3{font-family:'DM Serif Display',serif;font-size:1.25rem;margin-bottom:.2rem}
+.case-banner p{font-size:.85rem;color:rgba(255,255,255,0.75);line-height:1.55}
+section.module{max-width:1100px;margin:2.5rem auto;padding:0 2rem}
+.module-card{background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--border);padding:2rem;box-shadow:var(--shadow-sm)}
+.module-head{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.module-num{width:42px;height:42px;border-radius:10px;background:var(--orange-glow);color:var(--orange);display:flex;align-items:center;justify-content:center;font-weight:800;font-family:'DM Serif Display',serif;font-size:1.2rem;flex-shrink:0}
+.module-title{font-family:'DM Serif Display',serif;font-size:1.55rem;color:var(--navy);line-height:1.2}
+.module-intro{font-size:.95rem;color:var(--text-secondary);margin-bottom:1.4rem;line-height:1.65}
+.analogy{background:var(--bg-light);border-left:3px solid var(--orange);padding:.9rem 1.1rem;border-radius:var(--radius-sm);margin-bottom:1.4rem;font-size:.88rem;line-height:1.6}
+.analogy strong{color:var(--orange)}
+.playground{background:var(--bg-light);border-radius:var(--radius-sm);padding:1.4rem;border:1px solid var(--border);margin-bottom:1rem}
+.play-label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:.8rem;display:flex;align-items:center;gap:.4rem}
+.controls{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1rem;align-items:center}
+.controls label{font-size:.8rem;font-weight:600;color:var(--navy);margin-right:.3rem}
+.controls select,.controls input[type=range],.controls input[type=date],.controls input[type=text]{padding:.5rem .8rem;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.82rem;background:#fff;color:var(--navy);cursor:pointer;outline:none}
+.controls input[type=range]{padding:0;width:200px}
+.controls select:focus{border-color:var(--orange)}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:8px;font-family:inherit;font-size:.82rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;background:var(--orange);color:#fff}
+.btn:hover{background:var(--orange-dark);transform:translateY(-1px);box-shadow:0 4px 14px rgba(232,122,46,0.3)}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--navy)}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange)}
+.insight{margin-top:1rem;padding:.9rem 1.1rem;background:#FFF6E8;border-radius:var(--radius-sm);border:1px solid #F5D9B5;font-size:.85rem;color:var(--navy);line-height:1.6}
+.insight strong{color:var(--orange-dark)}
+.chart-wrap{background:#fff;border-radius:var(--radius-sm);padding:1rem;border:1px solid var(--border);margin-bottom:.6rem}
+.chart-wrap svg{display:block;width:100%;height:auto}
+.value-display{display:inline-block;min-width:30px;padding:.2rem .55rem;background:var(--orange);color:#fff;border-radius:6px;font-weight:700;font-size:.82rem;text-align:center;margin-left:.3rem}
+table.dt{width:100%;border-collapse:collapse;font-size:.82rem;background:#fff;border-radius:var(--radius-sm);overflow:hidden;box-shadow:var(--shadow-sm)}
+table.dt th{background:var(--navy-dark);color:#fff;padding:.55rem .7rem;text-align:left;font-weight:600;font-size:.75rem;letter-spacing:.03em}
+table.dt td{padding:.45rem .7rem;border-top:1px solid var(--border);color:var(--text-primary)}
+.split-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+@media(max-width:680px){.split-grid{grid-template-columns:1fr}}
+.feature-card{background:#fff;padding:1rem;border-radius:var(--radius-sm);border:1px solid var(--border)}
+.feature-card h6{font-family:'DM Serif Display',serif;font-size:.95rem;color:var(--navy);margin-bottom:.4rem}
+.feature-card .v{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--orange);font-weight:700}
+.feature-card .lbl{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:700}
+.tag{display:inline-block;padding:.18rem .55rem;border-radius:4px;background:var(--orange-glow);color:var(--orange);font-size:.7rem;font-weight:700;margin:.15rem .15rem .15rem 0}
+.binary-cell{display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;border-radius:4px;font-weight:700;font-size:.82rem;margin:.1rem}
+.binary-cell.on{background:var(--orange);color:#fff}
+.binary-cell.off{background:#eee;color:#9597A6}
+.quiz{background:linear-gradient(135deg,var(--navy-dark),var(--navy));color:#fff;border-radius:var(--radius);padding:1.8rem;margin-top:1.2rem}
+.quiz h4{font-family:'DM Serif Display',serif;font-size:1.15rem;margin-bottom:.4rem;color:var(--orange-light)}
+.quiz p{font-size:.88rem;color:rgba(255,255,255,0.8);margin-bottom:1rem}
+.quiz-opts{display:flex;flex-direction:column;gap:.5rem}
+.quiz-opt{padding:.7rem 1rem;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:inherit;font-size:.85rem;cursor:pointer;text-align:left;transition:all .2s}
+.quiz-opt:hover{border-color:var(--orange);background:rgba(232,122,46,0.15)}
+.quiz-opt.correct{background:rgba(76,175,80,0.2);border-color:var(--green)}
+.quiz-opt.wrong{background:rgba(220,80,80,0.2);border-color:#DC5050}
+.quiz-feedback{margin-top:.8rem;font-size:.85rem;line-height:1.55;display:none}
+.quiz-feedback.show{display:block}
+.summary{background:linear-gradient(135deg,#fff,var(--bg-light));border:2px solid var(--orange);border-radius:var(--radius);padding:2rem;margin:3rem auto;max-width:1100px}
+.summary h3{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--navy);margin-bottom:.8rem}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1rem}
+.summary-item{padding:1rem;background:#fff;border-radius:var(--radius-sm);border:1px solid var(--border)}
+.summary-item h5{font-size:.85rem;font-weight:700;color:var(--orange);margin-bottom:.3rem}
+.summary-item p{font-size:.78rem;color:var(--text-secondary);line-height:1.55}
+footer{padding:2rem;text-align:center;font-size:.78rem;color:var(--text-muted);border-top:1px solid var(--border);margin-top:3rem;background:var(--bg-card)}
+.scrollx{overflow-x:auto}
+.lag-grid{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.6rem}
+.day-pill{padding:.4rem .6rem;background:#fff;border:1.5px solid var(--border);border-radius:8px;font-size:.74rem;text-align:center;min-width:65px;transition:all .3s}
+.day-pill.shifted{background:var(--orange);color:#fff;border-color:var(--orange)}
+.day-pill .d{font-weight:700;font-size:.78rem}
+.day-pill .v{font-weight:700;font-family:'DM Serif Display',serif;font-size:1.1rem;margin-top:.1rem}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-title">Feature <span>Engineering</span> — Lesson 03</div>
+  <img src="hero.svg" alt="MokshPath" class="nav-logo">
+</nav>
+
+<section class="hero">
+  <div class="hero-badge"><span class="dot"></span> No-Code Interactive Lesson</div>
+  <h1>Don't just feed the model — <em>teach</em> it what to look at</h1>
+  <p>Feature engineering is the quiet superpower that separates working models from useless ones. Same data, same algorithm — but with thoughtfully crafted features, accuracy can jump 20–30%. In this lesson you'll shape four kinds of features by hand, and feel why each matters.</p>
+</section>
+
+<div class="case-banner">
+  <div class="case-icon">⚡</div>
+  <div>
+    <h3>The Case: Forecasting tomorrow's electricity demand</h3>
+    <p>A power utility wants to predict tomorrow's load so they can buy energy efficiently. Raw timestamps and a number won't cut it. You'll engineer features that capture <em>yesterday's load, weekly trends, the day of the week, the season, and the holiday calendar</em> — the same recipe used by Netflix, Swiggy, and Uber.</p>
+  </div>
+</div>
+
+<!-- MODULE 1: Lag features -->
+<section class="module">
+<div class="module-card">
+  <div class="module-head">
+    <div class="module-num">1</div>
+    <div class="module-title">Lag features — yesterday's value, today's prediction</div>
+  </div>
+  <p class="module-intro">A lag feature is "the value from N steps ago, added as a new column on today's row." Why? Because most real-world data has memory. Yesterday's electricity demand is the single best predictor of today's. A model can't "see" history unless you hand it history as a feature — that's all a lag does.</p>
+  <div class="analogy"><strong>Analogy:</strong> Imagine asking a friend to predict tomorrow's temperature with no information. Hopeless. Now hand them today's temperature — much easier. Lag features are how you hand "yesterday's temperature" to your model.</div>
+
+  <div class="playground">
+    <div class="play-label">▶ Try it — Slide the lag and watch what your model would see</div>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:.8rem">Top row = electricity demand over a week. Bottom row = the same numbers shifted by the lag you choose. The bottom row is literally a new column you'd add to your dataset. Notice how each row now "knows" something from the past.</p>
+    <div class="controls">
+      <label>Lag (days back)</label>
+      <input type="range" id="lag-val" min="1" max="6" value="1" oninput="drawLag()">
+      <span class="value-display" id="lag-label">1</span>
+    </div>
+    <div style="background:#fff;border-radius:var(--radius-sm);padding:1rem;border:1px solid var(--border)">
+      <div style="font-size:.78rem;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem">Today's demand (MW)</div>
+      <div class="lag-grid" id="lag-orig"></div>
+      <div style="font-size:.78rem;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-top:1rem;margin-bottom:.3rem">Lag column — what was <span id="lag-text">1</span> day(s) ago?</div>
+      <div class="lag-grid" id="lag-shift"></div>
+    </div>
+    <div class="insight" id="lag-insight"><strong>Notice:</strong> The first few cells are blank because there's no "yesterday" for the very first day. In Python, those become <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:.78rem">NaN</code> — you drop them before training. A small price for handing your model a memory.</div>
+  </div>
+</div>
+</section>
+
+<!-- MODULE 2: Rolling averages -->
+<section class="module">
+<div class="module-card">
+  <div class="module-head">
+    <div class="module-num">2</div>
+    <div class="module-title">Rolling averages — smooth out the noise</div>
+  </div>
+  <p class="module-intro">Daily numbers are jittery. A rolling (or moving) average replaces each day with the average of the last N days. The wiggle disappears; the trend appears. As a feature, it tells your model "the level for the past week" instead of "what happened on a single noisy day."</p>
+  <div class="analogy"><strong>Analogy:</strong> A single day's weight on the scale is misleading (you drank water, you wore jeans). The weekly average is your actual weight. Rolling averages do the same job for any time series.</div>
+
+  <div class="playground">
+    <div class="play-label">▶ Try it — Adjust the window, watch the noise disappear</div>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:.8rem">Blue line = raw daily demand. Orange line = rolling average. Widen the window → smoother but slower to react. Too narrow → still noisy. Too wide → misses recent shifts. The sweet spot depends on how quickly your system can change.</p>
+    <div class="controls">
+      <label>Window (days)</label>
+      <input type="range" id="roll-w" min="1" max="30" value="7" oninput="drawRoll()">
+      <span class="value-display" id="roll-wval">7</span>
+    </div>
+    <div class="chart-wrap"><svg id="roll-svg" viewBox="0 0 720 320"></svg></div>
+    <div class="insight" id="roll-insight"><strong>Trade-off:</strong> A 7-day rolling average is a classic default — long enough to smooth daily wiggle, short enough to react to real weekly shifts. For monthly trends try 30. For hourly metrics, try 24.</div>
+  </div>
+</div>
+</section>
+
+<!-- MODULE 3: Date-time decomposition -->
+<section class="module">
+<div class="module-card">
+  <div class="module-head">
+    <div class="module-num">3</div>
+    <div class="module-title">Date-time decomposition — one date, ten features</div>
+  </div>
+  <p class="module-intro">A date like "2026-03-21" is useless to most algorithms as text. But that single string secretly contains a dozen useful signals: weekday, month, quarter, season, is-it-a-weekend, is-it-a-holiday, days-since-start, week-of-year. Each becomes its own column. This single trick rescues most time-series projects.</p>
+  <div class="analogy"><strong>Analogy:</strong> A passport is "one document" but it contains nationality, age, gender, expiry — each useful for different purposes. Date-time decomposition opens the passport.</div>
+
+  <div class="playground">
+    <div class="play-label">▶ Try it — Pick any date, watch it explode into features</div>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:.8rem">Choose a date. Each card below is a new column that would be added to your DataFrame. Now the model can learn "weekends use less power" or "summers spike in load" — patterns invisible if you'd kept the date as a single string.</p>
+    <div class="controls">
+      <label>Pick a date</label>
+      <input type="date" id="dt-input" value="2026-08-15" oninput="decomposeDate()">
+      <button class="btn btn-ghost" onclick="randomDate()">🎲 Random</button>
+    </div>
+    <div class="split-grid" id="dt-grid"></div>
+    <div class="insight" id="dt-insight"><strong>The big idea:</strong> Each feature here is a hypothesis. "Maybe weekday matters." "Maybe holidays matter." Decomposition lets the model decide — it'll learn which ones predict and ignore the rest.</div>
+  </div>
+</div>
+</section>
+
+<!-- MODULE 4: One-hot encoding -->
+<section class="module">
+<div class="module-card">
+  <div class="module-head">
+    <div class="module-num">4</div>
+    <div class="module-title">One-hot encoding — turning words into numbers</div>
+  </div>
+  <p class="module-intro">Algorithms can't multiply by "Monday." They can multiply by 1. One-hot encoding takes a categorical column (Monday, Tuesday…) and replaces it with one new column per category, each filled with 0 or 1. Now the math works — and the model can learn a different coefficient for each category.</p>
+  <div class="analogy"><strong>Analogy:</strong> Filling a form. Instead of writing your blood group as text, you tick one of the boxes: ☑A+ ☐B+ ☐O+ ☐AB+. Each tick-box is one feature; only one is "on" at a time. That's one-hot.</div>
+
+  <div class="playground">
+    <div class="play-label">▶ Try it — Encode the "Day of week" column</div>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:.8rem">Left: original categorical column. Right: same data, one-hot encoded. Click any row to highlight which box "fires." This is exactly what <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:.78rem">pd.get_dummies()</code> does in Pandas.</p>
+    <div class="scrollx">
+      <table class="dt" id="oh-table"></table>
+    </div>
+    <div class="insight"><strong>Watch for:</strong> A column with 7 unique days becomes 7 new columns. Now imagine a column with 10,000 unique product IDs — one-hot would create a 10,000-wide table. That's why "high-cardinality" categories need different tricks (target encoding, embeddings) which you'll meet in the deep-learning module.</div>
+  </div>
+</div>
+</section>
+
+<!-- QUIZ -->
+<section class="module">
+<div class="quiz">
+  <h4>🎯 You're predicting Monday's traffic. Which feature combination would most likely help?</h4>
+  <div class="quiz-opts">
+    <button class="quiz-opt" data-correct="0">Just include the timestamp as text — modern models can parse it</button>
+    <button class="quiz-opt" data-correct="1">Lag-1 traffic + 7-day rolling average + day-of-week (one-hot) + is_holiday</button>
+    <button class="quiz-opt" data-correct="0">Only the raw traffic numbers — more features cause confusion</button>
+    <button class="quiz-opt" data-correct="0">A single one-hot column for "is it Monday yes/no"</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+</section>
+
+<div class="summary">
+  <h3>🌱 Four feature techniques that quietly run the world</h3>
+  <p style="color:var(--text-secondary);font-size:.92rem">Every forecast you've ever trusted — power grids, delivery ETAs, weather, fraud alerts — runs on engineered features like these. The model is the chef; the features are the ingredients. Better ingredients beat fancier recipes.</p>
+  <div class="summary-grid">
+    <div class="summary-item"><h5>Lag features</h5><p>Past values pulled into today's row. Lets the model "see" history.</p></div>
+    <div class="summary-item"><h5>Rolling average</h5><p>Smooths noise. Captures recent baseline level.</p></div>
+    <div class="summary-item"><h5>Date-time decomposition</h5><p>Explodes a date into 10+ predictive signals.</p></div>
+    <div class="summary-item"><h5>One-hot encoding</h5><p>Turns categories into 0/1 columns the model can multiply.</p></div>
+  </div>
+</div>
+
+<footer>Built for MokshPath learners · Lesson 03 of the Accelerated AI Program</footer>
+
+<script>
+/* ─────────── Synthetic week of electricity demand ─────────── */
+const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const demand=[820,790,810,830,840,720,680,800,800,815,820,860,710,690];
+
+function drawLag(){
+  const lag=+document.getElementById('lag-val').value;
+  document.getElementById('lag-label').textContent=lag;
+  document.getElementById('lag-text').textContent=lag;
+  const orig=document.getElementById('lag-orig'); orig.innerHTML='';
+  const shift=document.getElementById('lag-shift'); shift.innerHTML='';
+  days.forEach((d,i)=>{
+    const o=document.createElement('div'); o.className='day-pill';
+    o.innerHTML=`<div class="d">${d}</div><div class="v">${demand[i]}</div>`;
+    orig.appendChild(o);
+    const s=document.createElement('div'); s.className='day-pill shifted';
+    const v=i-lag>=0?demand[i-lag]:'—';
+    s.innerHTML=`<div class="d">${d}</div><div class="v">${v}</div>`;
+    if(v==='—') s.style.opacity='0.35';
+    shift.appendChild(s);
+  });
+  const before=lag>1?` and ${lag-1} other gaps`:'';
+  document.getElementById('lag-insight').innerHTML=`<strong>Read this:</strong> Today's row now sees its value from <strong>${lag} day(s) ago</strong> as a new feature. The model can learn rules like "if last Monday was 820MW, expect ~820MW this Monday." The first ${lag} row(s) have no past — drop them or impute.`;
+}
+
+function drawRoll(){
+  const w=+document.getElementById('roll-w').value;
+  document.getElementById('roll-wval').textContent=w;
+  // generate 90 days of noisy demand with weekly pattern + trend
+  const N=90;
+  const base=Array.from({length:N},(_,i)=>800+30*Math.sin(2*Math.PI*i/7)+i*1.5+ (((i*9301+49297)%233280)/233280-0.5)*80);
+  const rolled=base.map((_,i)=>{
+    const s=Math.max(0,i-w+1);
+    const slice=base.slice(s,i+1);
+    return slice.reduce((a,b)=>a+b,0)/slice.length;
+  });
+  const svg=document.getElementById('roll-svg');
+  const W=720,H=320, padL=50,padR=20,padT=20,padB=40;
+  const xMin=0, xMax=N-1;
+  const yMin=Math.min(...base)*0.95, yMax=Math.max(...base)*1.02;
+  const X=i=>padL+(i-xMin)/(xMax-xMin)*(W-padL-padR);
+  const Y=v=>H-padB-(v-yMin)/(yMax-yMin)*(H-padT-padB);
+  let html='';
+  html+=`<line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#9597A6"/>`;
+  html+=`<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${H-padB}" stroke="#9597A6"/>`;
+  // raw
+  let p='M'+base.map((v,i)=>`${X(i)},${Y(v)}`).join(' L');
+  html+=`<path d="${p}" stroke="#3B82F6" stroke-width="1.4" fill="none" opacity="0.7"/>`;
+  // rolled
+  p='M'+rolled.map((v,i)=>`${X(i)},${Y(v)}`).join(' L');
+  html+=`<path d="${p}" stroke="#E87A2E" stroke-width="3" fill="none"/>`;
+  // axes
+  for(let i=0;i<=5;i++){const v=yMin+(yMax-yMin)*i/5; const y=Y(v); html+=`<text x="${padL-8}" y="${y+4}" fill="#6B6D7B" font-size="11" text-anchor="end">${Math.round(v)}</text>`;}
+  for(let i=0;i<=6;i++){const d=Math.round(xMin+(xMax-xMin)*i/6); html+=`<text x="${X(d)}" y="${H-padB+18}" fill="#6B6D7B" font-size="11" text-anchor="middle">Day ${d}</text>`;}
+  // legend
+  html+=`<rect x="${W-180}" y="20" width="160" height="46" fill="#fff" stroke="#E5DDD4" rx="6"/>`;
+  html+=`<line x1="${W-170}" y1="34" x2="${W-150}" y2="34" stroke="#3B82F6" stroke-width="2"/>`;
+  html+=`<text x="${W-145}" y="38" fill="#2B2D42" font-size="11" font-weight="600">Raw demand</text>`;
+  html+=`<line x1="${W-170}" y1="55" x2="${W-150}" y2="55" stroke="#E87A2E" stroke-width="3"/>`;
+  html+=`<text x="${W-145}" y="59" fill="#2B2D42" font-size="11" font-weight="600">${w}-day rolling avg</text>`;
+  svg.innerHTML=html;
+  let msg;
+  if(w<=2) msg=`Window = ${w}. Almost no smoothing — the orange line still wiggles with daily noise. Not very useful as a feature.`;
+  else if(w<=10) msg=`Window = ${w} days. Clear smoothing while still tracking the weekly rhythm. This is the goldilocks zone for daily data.`;
+  else msg=`Window = ${w} days. Heavy smoothing — you can see the long-term trend, but the weekly pattern is washed out. Use this only when modelling slow seasonal shifts.`;
+  document.getElementById('roll-insight').innerHTML='<strong>Trade-off:</strong> '+msg;
+}
+
+/* Date decomposition */
+function decomposeDate(){
+  const v=document.getElementById('dt-input').value;
+  if(!v) return;
+  const d=new Date(v+'T00:00:00');
+  const wd=d.getDay();
+  const wdNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const m=d.getMonth()+1;
+  const mNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const q=Math.ceil(m/3);
+  const isWeekend=wd===0||wd===6;
+  const seasons={1:'Winter',2:'Winter',3:'Spring',4:'Spring',5:'Summer',6:'Summer',7:'Monsoon',8:'Monsoon',9:'Monsoon',10:'Autumn',11:'Autumn',12:'Winter'};
+  const season=seasons[m];
+  const indianHolidays={'01-26':'Republic Day','08-15':'Independence Day','10-02':'Gandhi Jayanti','12-25':'Christmas','03-08':'Holi (approx)','11-12':'Diwali (approx)'};
+  const mmdd=String(m).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const holiday=indianHolidays[mmdd];
+  const yr=d.getFullYear();
+  const start=new Date(yr,0,1);
+  const dayOfYear=Math.floor((d-start)/(1000*60*60*24))+1;
+  const weekOfYear=Math.ceil(dayOfYear/7);
+  const features=[
+    {h:'Year',v:yr,l:'YEAR'},
+    {h:'Month',v:mNames[m-1],l:'MONTH (1-12)'},
+    {h:'Day of month',v:d.getDate(),l:'DAY (1-31)'},
+    {h:'Day of week',v:wdNames[wd],l:'WEEKDAY (0-6)'},
+    {h:'Is weekend?',v:isWeekend?'Yes ⚡':'No',l:'BOOLEAN'},
+    {h:'Quarter',v:'Q'+q,l:'QUARTER (1-4)'},
+    {h:'Season',v:season,l:'SEASON'},
+    {h:'Day of year',v:dayOfYear,l:'DOY (1-366)'},
+    {h:'Week of year',v:weekOfYear,l:'WEEK (1-53)'},
+    {h:'Is holiday?',v:holiday?'Yes 🪔':'No',l:'HOLIDAY FLAG'}
+  ];
+  const grid=document.getElementById('dt-grid'); grid.innerHTML='';
+  features.forEach(f=>{
+    const c=document.createElement('div'); c.className='feature-card';
+    c.innerHTML=`<div class="lbl">${f.l}</div><div class="v">${f.v}</div><div style="font-size:.78rem;color:var(--text-secondary);margin-top:.2rem">${f.h}</div>`;
+    grid.appendChild(c);
+  });
+  document.getElementById('dt-insight').innerHTML='<strong>The big idea:</strong> One date ('+v+') just became 10 features. '+(holiday?'And it\'s '+holiday+' — your model will learn holiday patterns automatically.':'')+(isWeekend?' Plus the weekend flag — electricity demand drops noticeably on weekends, and the model needs that signal explicitly.':'');
+}
+function randomDate(){
+  const y=2024+Math.floor(Math.random()*3);
+  const m=1+Math.floor(Math.random()*12);
+  const d=1+Math.floor(Math.random()*28);
+  document.getElementById('dt-input').value=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  decomposeDate();
+}
+
+/* One-hot encoding */
+function buildOH(){
+  const week=['Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed'];
+  const dem=[820,790,810,830,840,720,680,800,800,815];
+  const cats=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  let html='<thead><tr><th>Day</th><th>Demand (MW)</th>';
+  cats.forEach(c=>html+=`<th>is_${c}</th>`);
+  html+='</tr></thead><tbody>';
+  week.forEach((d,i)=>{
+    html+=`<tr><td><strong>${d}</strong></td><td>${dem[i]}</td>`;
+    cats.forEach(c=>{
+      const on=d===c;
+      html+=`<td><div class="binary-cell ${on?'on':'off'}">${on?1:0}</div></td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</tbody>';
+  document.getElementById('oh-table').innerHTML=html;
+}
+
+/* Quiz */
+document.querySelectorAll('.quiz-opt').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.quiz-opt').forEach(b=>b.classList.remove('correct','wrong'));
+    const correct=btn.dataset.correct==='1';
+    btn.classList.add(correct?'correct':'wrong');
+    const fb=document.getElementById('qf'); fb.classList.add('show');
+    fb.innerHTML=correct
+      ? '✅ <strong>Yes!</strong> Each piece handles a different signal: <em>lag</em> captures momentum, <em>rolling avg</em> captures level, <em>day-of-week</em> captures weekly rhythm, <em>is_holiday</em> captures exceptions. Stacking complementary features is how strong models are built.'
+      : '❌ Reconsider: time-series prediction needs multiple complementary signals — recent value, recent level, calendar context, and exceptions. A single feature (or raw text) almost never wins.';
+  });
+});
+
+/* init */
+drawLag();
+drawRoll();
+decomposeDate();
+buildOH();
+</script>
+
+</body>
+</html>

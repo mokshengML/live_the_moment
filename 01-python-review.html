@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Review – Learn by Doing | MokshPath</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--orange:#E87A2E;--orange-dark:#D06A20;--orange-light:#F5943E;--orange-glow:rgba(232,122,46,0.12);--navy:#2B2D42;--navy-dark:#1A1B2E;--bg:#F3EDE7;--bg-card:#FFFFFF;--bg-light:#F9F5F0;--text-primary:#2B2D42;--text-secondary:#6B6D7B;--text-muted:#9597A6;--border:#E5DDD4;--green:#4CAF50;--green-light:#E8F5E9;--shadow-sm:0 2px 8px rgba(43,45,66,0.06);--shadow-md:0 8px 24px rgba(43,45,66,0.08);--shadow-lg:0 16px 48px rgba(43,45,66,0.12);--radius:14px;--radius-sm:8px}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text-primary);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.55}
+.nav{position:sticky;top:0;z-index:100;background:var(--bg-card);border-bottom:1px solid var(--border);padding:.6rem 2rem;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-sm)}
+.nav-title{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--navy)}
+.nav-title span{color:var(--orange)}
+.nav-logo{height:54px;width:auto}
+.hero{padding:3.5rem 2rem 2.5rem;max-width:1100px;margin:0 auto;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem 1rem;border-radius:50px;background:var(--orange-glow);color:var(--orange);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.2rem}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--orange);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,3rem);line-height:1.15;color:var(--navy);margin-bottom:1rem}
+.hero h1 em{font-style:normal;color:var(--orange)}
+.hero p{font-size:1.05rem;color:var(--text-secondary);max-width:680px;margin:0 auto;line-height:1.65}
+.case-banner{max-width:1100px;margin:1rem auto 0;padding:1.4rem 1.8rem;background:linear-gradient(135deg,var(--navy-dark),var(--navy));border-radius:var(--radius);color:#fff;display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
+.case-banner .case-icon{width:54px;height:54px;border-radius:12px;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0}
+.case-banner h3{font-family:'DM Serif Display',serif;font-size:1.25rem;margin-bottom:.2rem}
+.case-banner p{font-size:.85rem;color:rgba(255,255,255,0.75);line-height:1.55}
+section.module{max-width:1100px;margin:2.5rem auto;padding:0 2rem}
+.module-card{background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--border);padding:2rem;box-shadow:var(--shadow-sm)}
+.module-head{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.module-num{width:42px;height:42px;border-radius:10px;background:var(--orange-glow);color:var(--orange);display:flex;align-items:center;justify-content:center;font-weight:800;font-family:'DM Serif Display',serif;font-size:1.2rem;flex-shrink:0}
+.module-title{font-family:'DM Serif Display',serif;font-size:1.55rem;color:var(--navy);line-height:1.2}
+.module-intro{font-size:.95rem;color:var(--text-secondary);margin-bottom:1.4rem;line-height:1.65}
+.analogy{background:var(--bg-light);border-left:3px solid var(--orange);padding:.9rem 1.1rem;border-radius:var(--radius-sm);margin-bottom:1.4rem;font-size:.88rem;color:var(--text-primary);line-height:1.6}
+.analogy strong{color:var(--orange)}
+.playground{background:var(--bg-light);border-radius:var(--radius-sm);padding:1.4rem;border:1px solid var(--border);margin-bottom:1rem}
+.play-label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:.8rem;display:flex;align-items:center;gap:.4rem}
+table.dt{width:100%;border-collapse:collapse;font-size:.85rem;background:#fff;border-radius:var(--radius-sm);overflow:hidden;box-shadow:var(--shadow-sm)}
+table.dt th{background:var(--navy-dark);color:#fff;padding:.6rem .8rem;text-align:left;font-weight:600;font-size:.78rem;letter-spacing:.03em}
+table.dt td{padding:.55rem .8rem;border-top:1px solid var(--border);color:var(--text-primary)}
+table.dt tr:hover td{background:var(--orange-glow)}
+table.dt tr.hidden{opacity:.18;transition:opacity .35s}
+table.dt tr.highlight td{background:#FFF6E8;font-weight:600}
+.controls{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1rem;align-items:center}
+.controls label{font-size:.8rem;font-weight:600;color:var(--navy);margin-right:.3rem}
+.controls select,.controls input{padding:.5rem .8rem;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.82rem;background:#fff;color:var(--navy);cursor:pointer;outline:none;transition:border-color .2s}
+.controls select:focus,.controls input:focus{border-color:var(--orange)}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:8px;font-family:inherit;font-size:.82rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;background:var(--orange);color:#fff}
+.btn:hover{background:var(--orange-dark);transform:translateY(-1px);box-shadow:0 4px 14px rgba(232,122,46,0.3)}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--navy)}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange);background:transparent;box-shadow:none}
+.insight{margin-top:1rem;padding:.9rem 1.1rem;background:#FFF6E8;border-radius:var(--radius-sm);border:1px solid #F5D9B5;font-size:.85rem;color:var(--navy);line-height:1.6}
+.insight strong{color:var(--orange-dark)}
+.array-vis{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin:1rem 0}
+.cell{width:54px;height:54px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--navy);border:1.5px solid var(--border);font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;transition:all .3s}
+.cell.op{background:var(--orange);color:#fff;border-color:var(--orange);transform:scale(1.05)}
+.cell.result{background:var(--green);color:#fff;border-color:var(--green)}
+.array-row{display:flex;align-items:center;gap:1rem;justify-content:center;flex-wrap:wrap;margin:.6rem 0}
+.array-row .op-sign{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--navy)}
+.array-label{font-size:.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;min-width:90px}
+.chip{display:inline-flex;align-items:center;gap:.3rem;padding:.35rem .8rem;border-radius:50px;background:#fff;border:1.5px solid var(--border);font-size:.78rem;font-weight:600;color:var(--navy);cursor:grab;user-select:none;transition:all .2s}
+.chip:hover{border-color:var(--orange);color:var(--orange)}
+.chip.active{background:var(--orange);color:#fff;border-color:var(--orange)}
+.chip-tray{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.8rem}
+.dropzone{min-height:60px;padding:.8rem;border:2px dashed var(--border);border-radius:var(--radius-sm);background:#fff;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;transition:all .2s}
+.dropzone.over{border-color:var(--orange);background:var(--orange-glow)}
+.dropzone-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:.4rem;display:block}
+.drop-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin-bottom:1rem}
+@media(max-width:680px){.drop-row{grid-template-columns:1fr}}
+.merge-vis{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;margin:1rem 0}
+@media(max-width:680px){.merge-vis{grid-template-columns:1fr}}
+.merge-arrow{font-size:1.8rem;color:var(--orange);text-align:center;font-weight:700}
+.mini-table{font-size:.78rem}
+.mini-table th{padding:.4rem .55rem;font-size:.7rem}
+.mini-table td{padding:.35rem .55rem;font-size:.75rem}
+.quiz{background:linear-gradient(135deg,var(--navy-dark),var(--navy));color:#fff;border-radius:var(--radius);padding:1.8rem;margin-top:1.2rem}
+.quiz h4{font-family:'DM Serif Display',serif;font-size:1.15rem;margin-bottom:.4rem;color:var(--orange-light)}
+.quiz p{font-size:.88rem;color:rgba(255,255,255,0.8);margin-bottom:1rem}
+.quiz-opts{display:flex;flex-direction:column;gap:.5rem}
+.quiz-opt{padding:.7rem 1rem;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:inherit;font-size:.85rem;cursor:pointer;text-align:left;transition:all .2s}
+.quiz-opt:hover{border-color:var(--orange);background:rgba(232,122,46,0.15)}
+.quiz-opt.correct{background:rgba(76,175,80,0.2);border-color:var(--green)}
+.quiz-opt.wrong{background:rgba(220,80,80,0.2);border-color:#DC5050}
+.quiz-feedback{margin-top:.8rem;font-size:.85rem;line-height:1.55;display:none}
+.quiz-feedback.show{display:block}
+.pivot-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+@media(max-width:680px){.pivot-grid{grid-template-columns:1fr}}
+.summary{background:linear-gradient(135deg,#fff,var(--bg-light));border:2px solid var(--orange);border-radius:var(--radius);padding:2rem;margin:3rem auto;max-width:1100px}
+.summary h3{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--navy);margin-bottom:.8rem}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1rem}
+.summary-item{padding:1rem;background:#fff;border-radius:var(--radius-sm);border:1px solid var(--border)}
+.summary-item h5{font-size:.85rem;font-weight:700;color:var(--orange);margin-bottom:.3rem}
+.summary-item p{font-size:.78rem;color:var(--text-secondary);line-height:1.55}
+footer{padding:2rem;text-align:center;font-size:.78rem;color:var(--text-muted);border-top:1px solid var(--border);margin-top:3rem;background:var(--bg-card)}
+.scrollx{overflow-x:auto}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-title">Python <span>Review</span> — Lesson 01</div>
+  <img src="hero.svg" alt="MokshPath" class="nav-logo">
+</nav>
+
+<section class="hero">
+  <div class="hero-badge"><span class="dot"></span> No-Code Interactive Lesson</div>
+  <h1>Speak the language of <em>data</em>, not just code</h1>
+  <p>Pandas and NumPy are how analysts in every industry — marketing, healthcare, supply chain, social research — actually move data around. In this lesson you'll click, drag, and explore the same operations a Python script performs. No installation. No syntax. Just intuition.</p>
+</section>
+
+<div class="case-banner">
+  <div class="case-icon">☕</div>
+  <div>
+    <h3>The Case: Chai Point — 8 stores, 1 messy spreadsheet</h3>
+    <p>You're a new analyst at a chai-shop chain. The manager dumps a CSV on your desk: "Tell me which store is bleeding cash, which drink sells in the rain, and why Tuesdays are weird." Let's solve it the way a Python user would — but visually.</p>
+  </div>
+</div>
+
+<!-- MODULE 1: DataFrames -->
+<section class="module">
+<div class="module-card">
+  <div class="module-head">
+    <div class="module-num">1</div>
+    <div class="module-title">Pandas DataFrames — your data, in a table</div>
+  </div>
+  <p class="module-intro">A DataFrame is just a spreadsheet that Python understands. Rows are observations (one sale, one patient, one tweet). Columns are attributes (price, age, sentiment). Every Pandas operation you learn is something you've already done in Excel — just faster, repeatable, and on millions of rows.</p>
+  <div class="analogy"><strong>Analogy:</strong> If Excel is a paper ledger you flip through, a DataFrame is a librarian who can fetch any row by any rule in milliseconds.</div>
+
+  <div class="playground">
+    <div class="play-label">▶ Try it — Chai Point sales log</div>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:.8rem">Below is a real-looking DataFrame. Hover any row to see how an analyst reads it. Click a column header to sort — the same as <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:.78rem">df.sort_values()</code> in code.</p>
+    <div class="scrollx">
+      <table class="dt" id="t1">
+        <thead><tr>
+          <th data-col="0" data-type="n">Sale ID ↕</th>
+          <th data-col="1" data-type="s">Store ↕</th>
+          <th data-col="2" data-type="s">Drink ↕</th>
+          <th data-col="3" data-type="n">Price (₹) ↕</th>
+          <th data-col="4" data-type="n">Cups ↕</th>
+          <th data-col="5" data-type="s">Weather ↕</th>
+          <th data-col="6" data-type="s">Day ↕</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="insight"><strong>What just happened:</strong> Sorting reorganised the rows but kept every row intact — that's the DataFrame promise. Each row's identity (its <em>index</em>) survives the shuffle.</div>
+  </div>
+</div>
+</section>
+
+<!-- MODULE 2: NumPy Arrays -->
+<section class="module">
+<div class="module-card">
+  <div class="module-head">
+    <div class="module-num">2</div>
+    <div class="module-title">NumPy Arrays — math at the speed of light</div>
+  </div>
+  <p class="module-intro">A NumPy array is a row of numbers that knows how to do math on itself. When a column in your DataFrame is numeric, it's secretly a NumPy array. The magic: instead of multiplying each number one-by-one, NumPy does the whole row in one shot. This is why data science is fast.</p>
+  <div class="analogy"><strong>Analogy:</strong> A loop is asking each customer their age one at a time. A NumPy array is a school principal shouting "everyone +1 birthday!" — and every student ages instantly.</div>
+
+  <div class="playground">
+    <div class="play-label">▶ Try it — Apply a discount to all drinks at once</div>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:.6rem">The first row shows our price array (in ₹). Pick an operation — watch every number transform together. No loops, no waiting.</p>
+    <div class="controls" style="margin-bottom:0">
+      <label>Operation:</label>
+      <select id="np-op">
+        <option value="x0.8">Apply 20% discount (×0.8)</option>
+        <option value="+10">Add ₹10 service fee (+10)</option>
+        <option value="x1.18">Add 18% GST (×1.18)</option>
+        <option value="sq">Square each (²) — see scale</option>
+        <option value="sum">Sum all (total revenue)</option>
+      </select>
+      <button class="btn" onclick="runNp()">Run on whole array</button>
+    </div>
+    <div id="np-vis">
+      <div class="array-row"><div class="array-label">Original</div>
+        <div class="array-vis" id="np-orig"></div></div>
+      <div class="array-row"><div class="array-label">Result</div>
+        <div class="array-vis" id="np-res"></div></div>
+    </div>
+    <div class="insight" id="np-insight"><strong>Click "Run"</strong> to see vectorised math in action. In a real notebook this single line — <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:.78rem">prices * 0.8</code> — would update a million rows in milliseconds.</div>
+  </div>
+</div>
+</section>
+
+<!-- MODULE 3: Filtering -->
+<section class="module">
+<div class="module-card">
+  <div class="module-head">
+    <div class="module-num">3</div>
+    <div class="module-title">Filtering — keep only the rows that matter</div>
+  </div>
+  <p class="module-intro">90% of analysis starts with "show me only the rows where…". Filtering is how you carve out the slice of reality you care about — high-value customers, rainy days, the Bangalore store, anything.</p>
+  <div class="analogy"><strong>Analogy:</strong> Filtering is the airport security line. Every passenger walks through, but only those matching the rule come out the other side.</div>
+
+  <div class="playground">
+    <div class="play-label">▶ Try it — Build a filter on Chai Point sales</div>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:.8rem">Pick a column and a condition. The matching rows light up, the rest fade. Stack multiple conditions to combine them — exactly how Python's <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:.78rem">df[df.col &gt; x]</code> works.</p>
+    <div class="controls">
+      <label>Where</label>
+      <select id="f-col">
+        <option value="1">Store</option>
+        <option value="2">Drink</option>
+        <option value="3">Price</option>
+        <option value="4">Cups</option>
+        <option value="5">Weather</option>
+        <option value="6">Day</option>
+      </select>
+      <select id="f-op">
+        <option value="eq">equals</option>
+        <option value="ne">is not</option>
+        <option value="gt">&gt;</option>
+        <option value="lt">&lt;</option>
+      </select>
+      <input id="f-val" placeholder="value" style="min-width:140px">
+      <button class="btn" onclick="applyFilter()">Apply filter</button>
+      <button class="btn btn-ghost" onclick="resetFilter()">Reset</button>
+    </div>
+    <div class="scrollx">
+      <table class="dt" id="t-filter">
+        <thead><tr>
+          <th>ID</th><th>Store</th><th>Drink</th><th>Price</th><th>Cups</th><th>Weather</th><th>Day</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="insight" id="f-insight"><strong>Tip:</strong> Try <em>Weather = Rainy</em> first. Then mentally combine it with <em>Drink = Masala Chai</em>. You'll see why rainy-day masala chai is a real seasonal pattern — and why we'll build features around it later.</div>
+  </div>
+</div>
+</section>
+
+<!-- MODULE 4: GroupBy -->
+<section class="module">
+<div class="module-card">
+  <div class="module-head">
+    <div class="module-num">4</div>
+    <div class="module-title">GroupBy — collapse rows into insights</div>
+  </div>
+  <p class="module-intro">Filtering keeps rows. GroupBy <em>summarises</em> them. "What's the average sale per store?" "How many cups per day?" These are groupby questions — the workhorse of every business dashboard you've ever seen.</p>
+  <div class="analogy"><strong>Analogy:</strong> Groupby is sorting laundry into piles (whites, colours, delicates) and then counting each pile — instead of counting one sock at a time.</div>
+
+  <div class="playground">
+    <div class="play-label">▶ Try it — Group Chai Point sales</div>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:.8rem">Pick what to <strong>group by</strong> (the pile) and what to <strong>measure</strong> (the calculation). Watch hundreds of rows collapse into one summary per group.</p>
+    <div class="controls">
+      <label>Group by</label>
+      <select id="gb-col">
+        <option value="1">Store</option>
+        <option value="2">Drink</option>
+        <option value="5">Weather</option>
+        <option value="6">Day</option>
+      </select>
+      <label>Calculate</label>
+      <select id="gb-fn">
+        <option value="sum-4">Total Cups sold</option>
+        <option value="sum-3">Total Revenue (₹)</option>
+        <option value="mean-3">Avg Price (₹)</option>
+        <option value="count">Number of sales</option>
+      </select>
+      <button class="btn" onclick="runGroupby()">Group it</button>
+    </div>
+    <div id="gb-out"></div>
+    <div class="insight"><strong>Why this matters:</strong> Almost every "KPI" you see on a dashboard (revenue by region, churn by plan, sentiment by day) is a groupby in disguise. Once you can think in groups, you can answer 80% of business questions.</div>
+  </div>
+</div>
+</section>
+
+<!-- MODULE 5: Merging -->
+<section class="module">
+<div class="module-card">
+  <div class="module-head">
+    <div class="module-num">5</div>
+    <div class="module-title">Merging — stitch two tables into one</div>
+  </div>
+  <p class="module-intro">Real data lives in pieces. Customer info in one table. Orders in another. Product details in a third. Merging (or "joining") combines them using a shared key — like store ID, customer email, or product code.</p>
+  <div class="analogy"><strong>Analogy:</strong> You have a guest list and a name-tag list. Merging is pairing each guest with their tag by matching names — anyone unmatched stays at the door.</div>
+
+  <div class="playground">
+    <div class="play-label">▶ Try it — Add city data to each sale</div>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:.8rem">Left: sales (no city info). Right: a small store lookup table. Pick a merge type — see who survives the join.</p>
+    <div class="controls">
+      <label>Merge type</label>
+      <select id="m-type">
+        <option value="inner">Inner — only matches in both</option>
+        <option value="left">Left — keep all sales, fill missing</option>
+        <option value="outer">Outer — keep everything</option>
+      </select>
+      <button class="btn" onclick="runMerge()">Merge tables</button>
+    </div>
+    <div class="merge-vis">
+      <div>
+        <span class="dropzone-label">Sales (left)</span>
+        <table class="dt mini-table"><thead><tr><th>Store</th><th>Drink</th><th>Cups</th></tr></thead><tbody id="m-left"></tbody></table>
+      </div>
+      <div class="merge-arrow">⨝</div>
+      <div>
+        <span class="dropzone-label">Stores (right)</span>
+        <table class="dt mini-table"><thead><tr><th>Store</th><th>City</th><th>Manager</th></tr></thead><tbody id="m-right"></tbody></table>
+      </div>
+    </div>
+    <div>
+      <span class="dropzone-label">Merged result</span>
+      <div class="scrollx">
+        <table class="dt mini-table"><thead><tr><th>Store</th><th>Drink</th><th>Cups</th><th>City</th><th>Manager</th></tr></thead><tbody id="m-out"></tbody></table>
+      </div>
+    </div>
+    <div class="insight" id="m-insight"><strong>Read this carefully:</strong> Notice "Store_E" appears in sales but not in the stores table. <em>Inner</em> drops it. <em>Left</em> keeps the sale but leaves city blank. <em>Outer</em> keeps everything — sometimes that blank row is the most important clue in the data.</div>
+  </div>
+</div>
+</section>
+
+<!-- MODULE 6: Pivot Tables -->
+<section class="module">
+<div class="module-card">
+  <div class="module-head">
+    <div class="module-num">6</div>
+    <div class="module-title">Pivot Tables — reshape, don't recalculate</div>
+  </div>
+  <p class="module-intro">A pivot table turns a long, skinny dataset into a wide, summarising matrix. Rows of "Store + Drink + Cups" become a grid: stores on the side, drinks across the top, cups inside. Excel users already know this feeling — Pandas just makes it programmable.</p>
+  <div class="analogy"><strong>Analogy:</strong> Imagine a long shopping receipt versus a neat budget grid (categories on rows, months on columns). Same information — but the grid lets your eyes spot patterns instantly.</div>
+
+  <div class="playground">
+    <div class="play-label">▶ Try it — Build your own pivot</div>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:.8rem">Choose what goes on rows, what goes on columns, and what number fills each cell. Try <em>Rows=Day, Columns=Drink, Values=Cups</em> — Tuesday's weirdness will jump out.</p>
+    <div class="controls">
+      <label>Rows</label>
+      <select id="p-rows">
+        <option value="1">Store</option><option value="6" selected>Day</option><option value="5">Weather</option>
+      </select>
+      <label>Columns</label>
+      <select id="p-cols">
+        <option value="2" selected>Drink</option><option value="1">Store</option><option value="5">Weather</option>
+      </select>
+      <label>Values</label>
+      <select id="p-vals">
+        <option value="sum-4" selected>Sum of Cups</option>
+        <option value="sum-3">Sum of Revenue</option>
+        <option value="mean-3">Avg Price</option>
+      </select>
+      <button class="btn" onclick="runPivot()">Build pivot</button>
+    </div>
+    <div id="p-out" class="scrollx"></div>
+    <div class="insight"><strong>Reading the heatmap:</strong> Darker orange = higher value. The pivot doesn't just count — it lays the data out so your eyes do the analysis. This is why pivot tables show up in every board meeting on earth.</div>
+  </div>
+</div>
+</section>
+
+<!-- QUIZ -->
+<section class="module">
+<div class="quiz">
+  <h4>🎯 Quick check — pick the right tool</h4>
+  <p>"The manager wants to know: <em>for each store, on rainy days, how many cups of masala chai do we sell on average?</em>" Which sequence of operations would you use?</p>
+  <div class="quiz-opts">
+    <button class="quiz-opt" data-correct="0">Just sort the table by store and read the numbers</button>
+    <button class="quiz-opt" data-correct="0">Pivot table directly — no other steps needed</button>
+    <button class="quiz-opt" data-correct="1">Filter (Weather=Rainy AND Drink=Masala Chai) → GroupBy Store → mean of Cups</button>
+    <button class="quiz-opt" data-correct="0">Merge the rainy days with the sunny days first</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+</section>
+
+<!-- SUMMARY -->
+<div class="summary">
+  <h3>🌱 You've now seen the six moves that power 80% of data work</h3>
+  <p style="color:var(--text-secondary);font-size:.92rem">Whether you write Python or not, this is the mental model. When you next see an analyst on your team mention "groupby" or "pivot", you'll know they're doing one of these six moves — just in code.</p>
+  <div class="summary-grid">
+    <div class="summary-item"><h5>DataFrame</h5><p>The table itself. Rows × columns with labels.</p></div>
+    <div class="summary-item"><h5>NumPy Array</h5><p>A column doing math on itself, very fast.</p></div>
+    <div class="summary-item"><h5>Filter</h5><p>Keep rows that match a rule.</p></div>
+    <div class="summary-item"><h5>GroupBy</h5><p>Collapse rows into per-group summaries.</p></div>
+    <div class="summary-item"><h5>Merge</h5><p>Stitch two tables on a shared key.</p></div>
+    <div class="summary-item"><h5>Pivot</h5><p>Reshape rows × columns × values into a grid.</p></div>
+  </div>
+</div>
+
+<footer>Built for MokshPath learners · Lesson 01 of the Accelerated AI Program</footer>
+
+<script>
+/* ─────────── Chai Point dataset ─────────── */
+const stores = ['Bangalore-1','Bangalore-2','Mumbai-1','Delhi-1','Pune-1','Bangalore-1','Mumbai-1','Delhi-1','Pune-1','Bangalore-2','Mumbai-1','Delhi-1','Pune-1','Bangalore-1'];
+const drinks = ['Masala Chai','Cutting Chai','Adrak Chai','Cold Coffee','Masala Chai','Cutting Chai','Cold Coffee','Masala Chai','Adrak Chai','Masala Chai','Cutting Chai','Cold Coffee','Masala Chai','Adrak Chai'];
+const prices = [40,30,45,90,40,30,90,40,45,40,30,90,40,45];
+const cups = [120,85,40,55,95,110,30,140,60,75,90,25,130,50];
+const weather = ['Rainy','Sunny','Rainy','Sunny','Rainy','Sunny','Sunny','Rainy','Cloudy','Sunny','Rainy','Sunny','Cloudy','Rainy'];
+const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+const rows = stores.map((s,i)=>[i+1,s,drinks[i],prices[i],cups[i],weather[i],days[i]]);
+
+/* render table 1 with sort */
+function renderTable(id,data){
+  const tb=document.querySelector(`#${id} tbody`); tb.innerHTML='';
+  data.forEach(r=>{const tr=document.createElement('tr'); r.forEach(c=>{const td=document.createElement('td'); td.textContent=c; tr.appendChild(td);}); tb.appendChild(tr);});
+}
+renderTable('t1',rows);
+let sortDir={};
+document.querySelectorAll('#t1 th').forEach(th=>{
+  th.style.cursor='pointer';
+  th.addEventListener('click',()=>{
+    const col=+th.dataset.col, type=th.dataset.type;
+    sortDir[col]=!sortDir[col];
+    const sorted=[...rows].sort((a,b)=>{
+      if(type==='n') return sortDir[col]?a[col]-b[col]:b[col]-a[col];
+      return sortDir[col]?String(a[col]).localeCompare(b[col]):String(b[col]).localeCompare(a[col]);
+    });
+    renderTable('t1',sorted);
+  });
+});
+
+/* ─────────── NumPy demo ─────────── */
+const npArr=[40,30,45,90,40,30,55];
+function drawArr(id,arr,cls=''){
+  const c=document.getElementById(id); c.innerHTML='';
+  arr.forEach(v=>{const d=document.createElement('div'); d.className='cell '+cls; d.textContent=v; c.appendChild(d);});
+}
+drawArr('np-orig',npArr);
+drawArr('np-res',npArr.map(_=>'·'));
+function runNp(){
+  const op=document.getElementById('np-op').value;
+  let res, text;
+  if(op==='x0.8'){res=npArr.map(v=>Math.round(v*0.8)); text='Every price dropped 20% — one operation, 7 values done at once. In production this would scale to 7 million rows just as fast.';}
+  else if(op==='+10'){res=npArr.map(v=>v+10); text='₹10 added uniformly to every drink. No loop, no Excel formula dragging — vectorised.';}
+  else if(op==='x1.18'){res=npArr.map(v=>+(v*1.18).toFixed(0)); text='18% GST applied in one shot — exactly how tax columns get computed in production pipelines.';}
+  else if(op==='sq'){res=npArr.map(v=>v*v); text='Squaring spreads small/large differences dramatically — useful in error metrics like MSE.';}
+  else if(op==='sum'){const s=npArr.reduce((a,b)=>a+b,0); res=[s,'','','','','','']; text='Aggregations collapse an array to one number — total revenue across all rows is just sum().';}
+  // animate orig → result
+  const cells=document.querySelectorAll('#np-orig .cell');
+  cells.forEach((c,i)=>setTimeout(()=>c.classList.add('op'), i*100));
+  setTimeout(()=>{
+    drawArr('np-res',res.map(v=>v===''?'':v),'result');
+    document.querySelectorAll('#np-orig .cell').forEach(c=>c.classList.remove('op'));
+    document.getElementById('np-insight').innerHTML='<strong>What just happened:</strong> '+text;
+  }, cells.length*100+200);
+}
+
+/* ─────────── Filter ─────────── */
+function renderFilterTable(){
+  const tb=document.querySelector('#t-filter tbody'); tb.innerHTML='';
+  rows.forEach(r=>{const tr=document.createElement('tr'); r.forEach(c=>{const td=document.createElement('td'); td.textContent=c; tr.appendChild(td);}); tb.appendChild(tr);});
+}
+renderFilterTable();
+function applyFilter(){
+  const col=+document.getElementById('f-col').value;
+  const op=document.getElementById('f-op').value;
+  const v=document.getElementById('f-val').value.trim();
+  if(!v){alert('Type a value to compare against (e.g. Rainy, 80, Masala Chai)'); return;}
+  const trs=document.querySelectorAll('#t-filter tbody tr');
+  let kept=0;
+  trs.forEach((tr,i)=>{
+    const cell=rows[i][col]; let match=false;
+    if(op==='eq') match=String(cell).toLowerCase()===v.toLowerCase();
+    else if(op==='ne') match=String(cell).toLowerCase()!==v.toLowerCase();
+    else if(op==='gt') match=Number(cell)>Number(v);
+    else if(op==='lt') match=Number(cell)<Number(v);
+    tr.classList.toggle('hidden',!match);
+    tr.classList.toggle('highlight',match);
+    if(match) kept++;
+  });
+  document.getElementById('f-insight').innerHTML=`<strong>${kept} of ${rows.length} rows</strong> match your rule. In Python: <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:.78rem">df[df['${['ID','Store','Drink','Price','Cups','Weather','Day'][col]}'] ${op==='eq'?'==':op==='ne'?'!=':op==='gt'?'>':'<'} "${v}"]</code>`;
+}
+function resetFilter(){
+  document.querySelectorAll('#t-filter tbody tr').forEach(tr=>{tr.classList.remove('hidden','highlight');});
+  document.getElementById('f-val').value='';
+  document.getElementById('f-insight').innerHTML='<strong>Tip:</strong> Try <em>Weather = Rainy</em> first. Then mentally combine it with <em>Drink = Masala Chai</em>. You\'ll see why rainy-day masala chai is a real seasonal pattern.';
+}
+
+/* ─────────── GroupBy ─────────── */
+function runGroupby(){
+  const col=+document.getElementById('gb-col').value;
+  const [fn,vcol]=document.getElementById('gb-fn').value.split('-');
+  const groups={};
+  rows.forEach(r=>{const k=r[col]; if(!groups[k]) groups[k]=[]; groups[k].push(r);});
+  const result=Object.keys(groups).map(k=>{
+    const grp=groups[k]; let val;
+    if(fn==='count') val=grp.length;
+    else if(fn==='sum') val=grp.reduce((s,r)=>s+r[+vcol],0);
+    else if(fn==='mean') val=Math.round(grp.reduce((s,r)=>s+r[+vcol],0)/grp.length);
+    return [k,val,grp.length];
+  }).sort((a,b)=>b[1]-a[1]);
+
+  const max=Math.max(...result.map(r=>r[1]));
+  const colName=['ID','Store','Drink','Price','Cups','Weather','Day'][col];
+  const fnLabel=document.getElementById('gb-fn').selectedOptions[0].textContent;
+  let html=`<table class="dt"><thead><tr><th>${colName}</th><th>${fnLabel}</th><th>Rows in group</th><th>Visual</th></tr></thead><tbody>`;
+  result.forEach(([k,v,n])=>{
+    const w=Math.max(8,Math.round(v/max*100));
+    html+=`<tr><td><strong>${k}</strong></td><td>${v.toLocaleString()}</td><td>${n}</td><td><div style="background:var(--orange);height:14px;width:${w}%;border-radius:3px"></div></td></tr>`;
+  });
+  html+='</tbody></table>';
+  document.getElementById('gb-out').innerHTML=html;
+}
+runGroupby();
+
+/* ─────────── Merge ─────────── */
+const leftTable=[['B1','Masala Chai',120],['B1','Cutting Chai',85],['M1','Cold Coffee',55],['D1','Masala Chai',140],['E5','Adrak Chai',30]];
+const rightTable=[['B1','Bangalore','Priya'],['M1','Mumbai','Rohan'],['D1','Delhi','Anika'],['P1','Pune','Vikram']];
+
+function renderMini(id,data){
+  const tb=document.getElementById(id); tb.innerHTML='';
+  data.forEach(r=>{const tr=document.createElement('tr'); r.forEach(c=>{const td=document.createElement('td'); td.textContent=c===null?'—':c; if(c===null) td.style.color='var(--text-muted)'; tr.appendChild(td);}); tb.appendChild(tr);});
+}
+renderMini('m-left',leftTable);
+renderMini('m-right',rightTable);
+
+function runMerge(){
+  const type=document.getElementById('m-type').value;
+  let out=[];
+  if(type==='inner'){
+    leftTable.forEach(l=>{const r=rightTable.find(rr=>rr[0]===l[0]); if(r) out.push([l[0],l[1],l[2],r[1],r[2]]);});
+  } else if(type==='left'){
+    leftTable.forEach(l=>{const r=rightTable.find(rr=>rr[0]===l[0]); out.push([l[0],l[1],l[2],r?r[1]:null,r?r[2]:null]);});
+  } else {
+    leftTable.forEach(l=>{const r=rightTable.find(rr=>rr[0]===l[0]); out.push([l[0],l[1],l[2],r?r[1]:null,r?r[2]:null]);});
+    rightTable.forEach(r=>{if(!leftTable.find(l=>l[0]===r[0])) out.push([r[0],null,null,r[1],r[2]]);});
+  }
+  renderMini('m-out',out);
+  document.getElementById('m-insight').innerHTML=`<strong>${type.toUpperCase()} join:</strong> ${out.length} rows in result. ${type==='inner'?'Only stores present in BOTH tables survived. Store E5 dropped — its sale disappeared from the report.':type==='left'?'All sales kept; E5 stayed but has blank city info. This is the safest default when sales is your "source of truth".':'Everything kept — Pune-1 (P1) appears even though there were no sales there. Great for spotting gaps.'}`;
+}
+runMerge();
+
+/* ─────────── Pivot ─────────── */
+function runPivot(){
+  const r=+document.getElementById('p-rows').value;
+  const c=+document.getElementById('p-cols').value;
+  const [fn,vc]=document.getElementById('p-vals').value.split('-');
+  const rowKeys=[...new Set(rows.map(x=>x[r]))];
+  const colKeys=[...new Set(rows.map(x=>x[c]))];
+  const grid={};
+  rowKeys.forEach(rk=>{grid[rk]={}; colKeys.forEach(ck=>grid[rk][ck]=[]);});
+  rows.forEach(x=>grid[x[r]][x[c]].push(x[+vc]));
+  let max=0;
+  rowKeys.forEach(rk=>colKeys.forEach(ck=>{
+    const arr=grid[rk][ck];
+    let v=arr.length?(fn==='sum'?arr.reduce((a,b)=>a+b,0):Math.round(arr.reduce((a,b)=>a+b,0)/arr.length)):0;
+    grid[rk][ck]=v; if(v>max) max=v;
+  }));
+  let html=`<table class="dt"><thead><tr><th>${['ID','Store','Drink','Price','Cups','Weather','Day'][r]} \\ ${['ID','Store','Drink','Price','Cups','Weather','Day'][c]}</th>`;
+  colKeys.forEach(ck=>html+=`<th>${ck}</th>`); html+='</tr></thead><tbody>';
+  rowKeys.forEach(rk=>{
+    html+=`<tr><td><strong>${rk}</strong></td>`;
+    colKeys.forEach(ck=>{
+      const v=grid[rk][ck];
+      const intensity=max?v/max:0;
+      const bg=`rgba(232,122,46,${intensity*0.7})`;
+      const txtCol=intensity>0.5?'#fff':'var(--navy)';
+      html+=`<td style="background:${bg};color:${txtCol};text-align:center;font-weight:600">${v||'—'}</td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById('p-out').innerHTML=html;
+}
+runPivot();
+
+/* ─────────── Quiz ─────────── */
+document.querySelectorAll('.quiz-opt').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.quiz-opt').forEach(b=>b.classList.remove('correct','wrong'));
+    const correct=btn.dataset.correct==='1';
+    btn.classList.add(correct?'correct':'wrong');
+    const fb=document.getElementById('qf'); fb.classList.add('show');
+    fb.innerHTML=correct
+      ? '✅ <strong>Exactly.</strong> First narrow the rows (filter), then collapse to per-store summaries (groupby), then take the mean. That ordered chain is the rhythm of analytical thinking in Pandas.'
+      : '❌ Not quite. Notice the question has three signals: <em>"for each store"</em> (→ groupby), <em>"on rainy days"</em> and <em>"masala chai"</em> (→ filter first), <em>"on average"</em> (→ mean). The right answer chains all three.';
+  });
+});
+</script>
+
+</body>
+</html>

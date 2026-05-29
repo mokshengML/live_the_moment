@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Storytelling — Learn by Doing | MokshPath</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--orange:#E87A2E;--orange-dark:#D06A20;--orange-light:#F5943E;--orange-glow:rgba(232,122,46,0.12);--navy:#2B2D42;--navy-dark:#1A1B2E;--bg:#F3EDE7;--bg-card:#FFFFFF;--bg-light:#F9F5F0;--text-primary:#2B2D42;--text-secondary:#6B6D7B;--text-muted:#9597A6;--border:#E5DDD4;--green:#4CAF50;--green-light:#E8F5E9;--red:#DC5050;--shadow-sm:0 2px 8px rgba(43,45,66,0.06);--shadow-md:0 8px 24px rgba(43,45,66,0.08);--shadow-lg:0 16px 48px rgba(43,45,66,0.12);--radius:14px;--radius-sm:8px}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text-primary);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.55}
+.nav{position:sticky;top:0;z-index:100;background:var(--bg-card);border-bottom:1px solid var(--border);padding:.6rem 2rem;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-sm)}
+.nav-title{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--navy)}
+.nav-title span{color:var(--orange)}
+.nav-logo{height:54px;width:auto}
+.hero{padding:3.5rem 2rem 2.5rem;max-width:1100px;margin:0 auto;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem 1rem;border-radius:50px;background:var(--orange-glow);color:var(--orange);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.2rem}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--orange);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,3rem);line-height:1.15;color:var(--navy);margin-bottom:1rem}
+.hero h1 em{font-style:normal;color:var(--orange)}
+.hero p{font-size:1.05rem;color:var(--text-secondary);max-width:680px;margin:0 auto;line-height:1.65}
+.case-banner{max-width:1100px;margin:1rem auto 0;padding:1.4rem 1.8rem;background:linear-gradient(135deg,var(--navy-dark),var(--navy));border-radius:var(--radius);color:#fff;display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
+.case-banner .case-icon{width:54px;height:54px;border-radius:12px;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0}
+.case-banner h3{font-family:'DM Serif Display',serif;font-size:1.25rem;margin-bottom:.2rem}
+.case-banner p{font-size:.85rem;color:rgba(255,255,255,0.75);line-height:1.55}
+.case-banner em{color:var(--orange-light);font-style:normal}
+section.module{max-width:1100px;margin:2.5rem auto;padding:0 2rem}
+.module-card{background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--border);padding:2rem;box-shadow:var(--shadow-sm)}
+.module-head{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.module-num{width:42px;height:42px;border-radius:10px;background:var(--orange-glow);color:var(--orange);display:flex;align-items:center;justify-content:center;font-weight:800;font-family:'DM Serif Display',serif;font-size:1.2rem;flex-shrink:0}
+.module-title{font-family:'DM Serif Display',serif;font-size:1.55rem;color:var(--navy);line-height:1.2}
+.module-intro{font-size:.95rem;color:var(--text-secondary);margin-bottom:1.4rem;line-height:1.65}
+.analogy{background:var(--bg-light);border-left:3px solid var(--orange);padding:.9rem 1.1rem;border-radius:var(--radius-sm);margin-bottom:1.4rem;font-size:.88rem;color:var(--text-primary);line-height:1.6}
+.analogy strong{color:var(--orange)}
+.playground{background:var(--bg-light);border-radius:var(--radius-sm);padding:1.4rem;border:1px solid var(--border);margin-bottom:1rem}
+.play-label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:.8rem;display:flex;align-items:center;gap:.4rem}
+.controls{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1rem;align-items:center}
+.controls label{font-size:.8rem;font-weight:600;color:var(--navy);margin-right:.3rem}
+.controls select,.controls input{padding:.5rem .8rem;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.82rem;background:#fff;color:var(--navy);cursor:pointer;outline:none;transition:border-color .2s}
+.controls select:focus,.controls input:focus{border-color:var(--orange)}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:8px;font-family:inherit;font-size:.82rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;background:var(--orange);color:#fff}
+.btn:hover{background:var(--orange-dark);transform:translateY(-1px);box-shadow:0 4px 14px rgba(232,122,46,0.3)}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--navy)}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange);background:transparent;box-shadow:none}
+.insight{margin-top:1rem;padding:.9rem 1.1rem;background:#FFF6E8;border-radius:var(--radius-sm);border:1px solid #F5D9B5;font-size:.85rem;color:var(--navy);line-height:1.6}
+.insight strong{color:var(--orange-dark)}
+
+/* Toggle switches for annotations */
+.toggle-group{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;background:#fff;border-radius:8px;border:1.5px solid var(--border);transition:all .2s;cursor:pointer}
+.toggle-row:hover{border-color:var(--orange)}
+.toggle-row.on{border-color:var(--orange);background:var(--orange-glow)}
+.toggle-row-label{font-size:.85rem;font-weight:600;color:var(--navy);display:flex;align-items:center;gap:.5rem}
+.toggle-row-label .num{width:22px;height:22px;border-radius:50%;background:var(--border);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;transition:background .2s}
+.toggle-row.on .num{background:var(--orange)}
+.toggle-row-desc{font-size:.72rem;color:var(--text-muted);margin-top:.15rem;font-weight:400}
+.toggle-switch{width:36px;height:20px;border-radius:50px;background:var(--border);position:relative;transition:background .25s;flex-shrink:0}
+.toggle-switch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .25s;box-shadow:0 1px 3px rgba(0,0,0,0.15)}
+.toggle-row.on .toggle-switch{background:var(--orange)}
+.toggle-row.on .toggle-switch::after{left:18px}
+
+/* Chart container for annotated viz */
+.chart-stage{background:#fff;border-radius:var(--radius-sm);padding:1.4rem;border:1px solid var(--border);position:relative;min-height:340px}
+.chart-svg{width:100%;height:auto;display:block}
+
+/* Narrative cards (drag-or-click sequencing) */
+.narrative-info{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:680px){.narrative-info{grid-template-columns:1fr}}
+.narrative-col{background:#fff;border-radius:var(--radius-sm);padding:1rem;border:1.5px solid var(--border)}
+.narrative-col-label{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.7rem}
+.story-card{background:var(--bg-light);border:1.5px solid var(--border);border-radius:8px;padding:.7rem .9rem;margin-bottom:.5rem;cursor:pointer;transition:all .2s;font-size:.82rem;color:var(--navy);display:flex;align-items:flex-start;gap:.6rem}
+.story-card:hover{border-color:var(--orange);background:var(--orange-glow)}
+.story-card .badge{flex-shrink:0;width:24px;height:24px;border-radius:6px;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem}
+.story-card.in-order{background:#fff;border-color:var(--green);opacity:.85}
+.story-card.in-order .badge{background:var(--green)}
+.story-card.placeholder{background:transparent;border:2px dashed var(--border);color:var(--text-muted);cursor:default;font-style:italic;font-size:.75rem;text-align:center;justify-content:center;padding:1rem}
+.narrative-check{margin-top:1rem}
+
+/* Script builder */
+.script-stage{background:#fff;border-radius:var(--radius-sm);padding:1.4rem;border:1px solid var(--border)}
+.script-line{display:flex;align-items:baseline;gap:.5rem;padding:.6rem 0;border-bottom:1px solid var(--bg-light);flex-wrap:wrap}
+.script-line:last-child{border-bottom:none}
+.script-line .static-text{font-size:.92rem;color:var(--navy);line-height:1.6}
+.script-blank{display:inline-block;min-width:170px;border-bottom:2px dashed var(--orange);padding:0 .35rem;font-weight:600;color:var(--orange);background:transparent;border-radius:0;font-family:inherit;font-size:.92rem;outline:none}
+.script-blank:focus{background:var(--orange-glow);border-bottom-color:var(--orange-dark)}
+.script-blank::placeholder{color:var(--text-muted);font-style:italic;font-weight:500}
+.audience-row{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+.aud-chip{padding:.4rem .9rem;border-radius:50px;font-size:.78rem;font-weight:600;border:1.5px solid var(--border);background:#fff;cursor:pointer;transition:all .2s;color:var(--text-secondary)}
+.aud-chip:hover{border-color:var(--orange);color:var(--orange)}
+.aud-chip.active{background:var(--orange);color:#fff;border-color:var(--orange)}
+.aud-tip{background:var(--orange-glow);border-radius:var(--radius-sm);padding:.7rem 1rem;font-size:.82rem;color:var(--navy);line-height:1.55;margin-bottom:1rem;display:flex;gap:.6rem;align-items:flex-start}
+.aud-tip .emo{flex-shrink:0;font-size:1.1rem}
+.script-preview{margin-top:1.2rem;padding:1.2rem;background:linear-gradient(135deg,var(--navy-dark),var(--navy));border-radius:var(--radius-sm);color:#fff;line-height:1.7;font-size:.95rem;font-style:italic;display:none}
+.script-preview.show{display:block}
+.script-preview::before{content:'"';font-family:'DM Serif Display',serif;font-size:2.5rem;color:var(--orange-light);line-height:0;vertical-align:-.6em}
+.script-preview strong{color:var(--orange-light);font-style:normal}
+
+/* Slide critique */
+.slide-toggle-row{display:flex;justify-content:center;gap:.4rem;margin-bottom:1rem}
+.slide-tab{padding:.5rem 1.1rem;border-radius:8px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-family:inherit;font-size:.82rem;font-weight:600;color:var(--text-secondary);transition:all .2s}
+.slide-tab.bad.active{background:var(--red);color:#fff;border-color:var(--red)}
+.slide-tab.good.active{background:var(--green);color:#fff;border-color:var(--green)}
+.slide-frame{background:#fff;border-radius:var(--radius-sm);padding:1.6rem;border:2px solid var(--border);min-height:280px;transition:border-color .25s}
+.slide-frame.bad{border-color:rgba(220,80,80,0.45)}
+.slide-frame.good{border-color:rgba(76,175,80,0.5)}
+.slide-frame h5{font-family:'DM Serif Display',serif;color:var(--navy);margin-bottom:.5rem;font-size:1.05rem}
+.slide-frame .takeaway{margin-top:.8rem;padding:.7rem .9rem;background:var(--green-light);border-left:3px solid var(--green);border-radius:6px;font-size:.85rem;color:var(--navy)}
+.slide-frame .takeaway strong{color:var(--green)}
+.slide-issues{margin-top:1rem;display:flex;flex-direction:column;gap:.4rem}
+.slide-issue{display:flex;align-items:flex-start;gap:.5rem;font-size:.82rem;color:var(--text-secondary);padding:.5rem .7rem;background:#FFF1F1;border-radius:6px;border-left:3px solid var(--red)}
+.slide-fix{background:var(--green-light);border-left-color:var(--green);color:var(--navy)}
+.slide-issue .ic{flex-shrink:0;font-weight:800;color:var(--red)}
+.slide-fix .ic{color:var(--green)}
+
+/* Practice quiz */
+.quiz{background:linear-gradient(135deg,var(--navy-dark),var(--navy));color:#fff;border-radius:var(--radius);padding:1.8rem;margin-top:1.2rem}
+.quiz h4{font-family:'DM Serif Display',serif;font-size:1.15rem;margin-bottom:.4rem;color:var(--orange-light)}
+.quiz p{font-size:.88rem;color:rgba(255,255,255,0.8);margin-bottom:1rem}
+.quiz-chart{background:rgba(255,255,255,0.07);border-radius:8px;padding:1rem;margin-bottom:1rem}
+.quiz-opts{display:flex;flex-direction:column;gap:.5rem}
+.quiz-opt{padding:.7rem 1rem;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-family:inherit;font-size:.85rem;cursor:pointer;text-align:left;transition:all .2s;line-height:1.5}
+.quiz-opt:hover{border-color:var(--orange);background:rgba(232,122,46,0.15)}
+.quiz-opt.correct{background:rgba(76,175,80,0.2);border-color:var(--green)}
+.quiz-opt.wrong{background:rgba(220,80,80,0.2);border-color:#DC5050}
+.quiz-feedback{margin-top:.8rem;font-size:.85rem;line-height:1.6;display:none;padding:.8rem;background:rgba(0,0,0,0.18);border-radius:6px}
+.quiz-feedback.show{display:block}
+.quiz-feedback strong{color:var(--orange-light)}
+
+.summary{background:linear-gradient(135deg,#fff,var(--bg-light));border:2px solid var(--orange);border-radius:var(--radius);padding:2rem;margin:3rem auto;max-width:1100px}
+.summary h3{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--navy);margin-bottom:.8rem}
+.summary p{font-size:.92rem;color:var(--text-secondary);line-height:1.65}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1.3rem}
+.summary-item{padding:1rem;background:#fff;border-radius:var(--radius-sm);border:1px solid var(--border)}
+.summary-item h5{font-size:.85rem;font-weight:700;color:var(--orange);margin-bottom:.3rem}
+.summary-item p{font-size:.78rem;color:var(--text-secondary);line-height:1.55}
+footer{padding:2rem;text-align:center;font-size:.78rem;color:var(--text-muted);border-top:1px solid var(--border);margin-top:3rem;background:var(--bg-card)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-title">Data <span>Storytelling</span> — Lesson 04</div>
+  <img src="hero.svg" alt="MokshPath" class="nav-logo">
+</nav>
+
+<section class="hero">
+  <div class="hero-badge"><span class="dot"></span> No-Code Interactive Lesson</div>
+  <h1>Make the numbers <em>talk</em></h1>
+  <p>You can have the cleanest dataset, the smartest model, the most accurate chart — and still lose the room. Storytelling is the skill that turns analysis into action. In this lesson you'll edit a real chart, sequence a narrative, and build a 60-second script for three different audiences.</p>
+</section>
+
+<div class="case-banner">
+  <div class="case-icon">🥬</div>
+  <div>
+    <h3>The Case: FreshFare Grocery — Q3 satisfaction is sinking</h3>
+    <p>You're an analyst at FreshFare, a 30-minute grocery delivery startup. Last quarter your 5-star rating share dropped from 64% to 49%. The CEO has booked 15 minutes on her calendar — <em>"tell me what's going on and what to do about it."</em> The data is ready. Now you have to tell the story.</p>
+  </div>
+</div>
+
+<!-- MODULE 1: Why stories beat charts -->
+<section class="module">
+  <div class="module-card">
+    <div class="module-head">
+      <div class="module-num">1</div>
+      <div class="module-title">Why stories beat charts</div>
+    </div>
+    <p class="module-intro">A chart shows the data. A story tells the listener what to do about it. The same chart can leave a room confused or trigger a decision in 30 seconds — depending on how it's framed.</p>
+
+    <div class="analogy">
+      <strong>Think of it like this:</strong> Giving someone a chart with no commentary is like handing them a map with no destination. They'll squint at the streets and ask, "What am I looking for?" Your job as an analyst is to <strong>circle the destination</strong> and say, "We need to go here. This route is fastest."
+    </div>
+
+    <div class="playground">
+      <div class="play-label">▸ Click the toggle: same data, very different impact</div>
+      <div id="silentVsStory" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="chart-stage" style="min-height:auto">
+          <h5 style="font-size:.85rem;color:var(--text-muted);margin-bottom:.6rem;font-weight:600">Chart only — what most people send</h5>
+          <svg viewBox="0 0 320 180" class="chart-svg">
+            <g font-family="Plus Jakarta Sans" font-size="9" fill="#9597A6">
+              <line x1="40" y1="20" x2="40" y2="150" stroke="#E5DDD4"/>
+              <line x1="40" y1="150" x2="310" y2="150" stroke="#E5DDD4"/>
+              <text x="38" y="153" text-anchor="end">0</text><text x="38" y="113" text-anchor="end">25</text>
+              <text x="38" y="73" text-anchor="end">50</text><text x="38" y="33" text-anchor="end">75</text>
+              <text x="70" y="165" text-anchor="middle">Jan</text><text x="115" y="165" text-anchor="middle">Mar</text>
+              <text x="160" y="165" text-anchor="middle">May</text><text x="205" y="165" text-anchor="middle">Jul</text>
+              <text x="250" y="165" text-anchor="middle">Sep</text>
+              <polyline points="60,48 90,52 120,55 150,58 180,72 210,98 240,112 270,118" fill="none" stroke="#6B6D7B" stroke-width="2"/>
+            </g>
+          </svg>
+        </div>
+        <div class="chart-stage" style="min-height:auto">
+          <h5 style="font-size:.85rem;color:var(--orange);margin-bottom:.6rem;font-weight:700">Chart + story — what gets you funded</h5>
+          <svg viewBox="0 0 320 180" class="chart-svg">
+            <g font-family="Plus Jakarta Sans" font-size="9" fill="#9597A6">
+              <line x1="40" y1="20" x2="40" y2="150" stroke="#E5DDD4"/>
+              <line x1="40" y1="150" x2="310" y2="150" stroke="#E5DDD4"/>
+              <text x="38" y="153" text-anchor="end">0</text><text x="38" y="113" text-anchor="end">25</text>
+              <text x="38" y="73" text-anchor="end">50</text><text x="38" y="33" text-anchor="end">75</text>
+              <text x="70" y="165" text-anchor="middle">Jan</text><text x="115" y="165" text-anchor="middle">Mar</text>
+              <text x="160" y="165" text-anchor="middle">May</text><text x="205" y="165" text-anchor="middle">Jul</text>
+              <text x="250" y="165" text-anchor="middle">Sep</text>
+              <polyline points="60,48 90,52 120,55 150,58" fill="none" stroke="#9597A6" stroke-width="2"/>
+              <polyline points="150,58 180,72 210,98 240,112 270,118" fill="none" stroke="#E87A2E" stroke-width="3"/>
+              <circle cx="180" cy="72" r="4" fill="#E87A2E"/>
+              <line x1="180" y1="72" x2="195" y2="38" stroke="#E87A2E" stroke-width="1.2" stroke-dasharray="2,2"/>
+              <text x="198" y="34" font-size="8" fill="#E87A2E" font-weight="700">Heatwave starts</text>
+              <text x="198" y="44" font-size="7" fill="#9597A6">June 10 — fresh produce spoils</text>
+              <rect x="148" y="155" width="125" height="11" fill="#E87A2E" opacity="0.18" rx="2"/>
+              <text x="210" y="178" text-anchor="middle" font-size="8.5" font-weight="700" fill="#E87A2E">↑ 15pt drop in 5★ ratings</text>
+              <text x="40" y="14" font-size="10" font-weight="800" fill="#2B2D42">5★ rating share, FreshFare 2026</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div class="insight">
+        <strong>Same numbers. Different outcome.</strong> The left chart says "scores went down." The right chart says "scores went down <em>because</em> the June heatwave spoiled fresh produce — and that's what we need to fix." One leaves the room asking questions. The other walks out with a budget.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 2: Annotated visualizations -->
+<section class="module">
+  <div class="module-card">
+    <div class="module-head">
+      <div class="module-num">2</div>
+      <div class="module-title">Annotated visualisations — turn the lights on, one switch at a time</div>
+    </div>
+    <p class="module-intro">A great chart is built in layers: the data, then the framing, then the call-outs. Most analysts stop at layer one. Here's how each annotation adds a new sentence to your story. Toggle them on and watch the chart speak louder.</p>
+
+    <div class="analogy">
+      <strong>Annotation = sentence.</strong> Each one is a thing you'd say out loud. If you have to <strong>say</strong> something to make the chart clear ("ignore April, it's an outlier", "this dip is when we launched the new app"), put it <strong>on</strong> the chart. Your future self in a slack message will thank you.
+    </div>
+
+    <div class="playground">
+      <div class="play-label">▸ Build the chart one annotation at a time</div>
+      <div class="toggle-group">
+        <div class="toggle-row" data-key="title" onclick="toggleAnn('title')">
+          <div>
+            <div class="toggle-row-label"><span class="num">1</span>Clear, opinionated title</div>
+            <div class="toggle-row-desc">Not "Sales by month" — say what's interesting about it.</div>
+          </div>
+          <div class="toggle-switch"></div>
+        </div>
+        <div class="toggle-row" data-key="highlight" onclick="toggleAnn('highlight')">
+          <div>
+            <div class="toggle-row-label"><span class="num">2</span>Highlight the bar that matters</div>
+            <div class="toggle-row-desc">Grey out the rest. Eyes go where the colour is.</div>
+          </div>
+          <div class="toggle-switch"></div>
+        </div>
+        <div class="toggle-row" data-key="callout" onclick="toggleAnn('callout')">
+          <div>
+            <div class="toggle-row-label"><span class="num">3</span>Add a callout with the "why"</div>
+            <div class="toggle-row-desc">A label, an arrow, a tiny explanation of the spike or dip.</div>
+          </div>
+          <div class="toggle-switch"></div>
+        </div>
+        <div class="toggle-row" data-key="takeaway" onclick="toggleAnn('takeaway')">
+          <div>
+            <div class="toggle-row-label"><span class="num">4</span>Spell out the takeaway</div>
+            <div class="toggle-row-desc">One line at the bottom: what should the viewer DO?</div>
+          </div>
+          <div class="toggle-switch"></div>
+        </div>
+      </div>
+
+      <div class="chart-stage">
+        <svg id="annChart" viewBox="0 0 600 320" class="chart-svg"></svg>
+      </div>
+
+      <div class="insight" id="annInsight">
+        <strong>You're showing the raw chart.</strong> A viewer can guess that something happened with cold-chain — but they have to do the work. Add at least the title and the highlight to lift them out of that work.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 3: Narrative structure -->
+<section class="module">
+  <div class="module-card">
+    <div class="module-head">
+      <div class="module-num">3</div>
+      <div class="module-title">EDA narrative — the five-card story arc</div>
+    </div>
+    <p class="module-intro">Every good analysis follows the same shape. Whether you write a memo, a slide deck or a research paper, you're telling some version of: <em>we wondered → we looked → we found → it matters because → so let's...</em></p>
+
+    <div class="analogy">
+      <strong>Movies do this too.</strong> Setup, inciting incident, investigation, revelation, resolution. Your analysis IS a detective story. Skipping a beat is why presentations leave people asking, "Sorry, what's the point?"
+    </div>
+
+    <div class="playground">
+      <div class="play-label">▸ Click a card on the left to put it in the right order</div>
+      <div class="narrative-info">
+        <div class="narrative-col">
+          <div class="narrative-col-label">The five story beats — shuffled</div>
+          <div id="cardPool"></div>
+        </div>
+        <div class="narrative-col">
+          <div class="narrative-col-label">Your narrative order</div>
+          <div id="cardOrder"></div>
+        </div>
+      </div>
+      <div class="narrative-check">
+        <button class="btn" onclick="checkNarrative()">Check my order</button>
+        <button class="btn btn-ghost" onclick="resetNarrative()">Reset</button>
+      </div>
+      <div class="insight" id="narrativeInsight">
+        <strong>Tip:</strong> Start with what the reader cares about (the business setup), end with what they should do. The "finding" alone is never enough — sandwich it between context and action.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 4: Script builder -->
+<section class="module">
+  <div class="module-card">
+    <div class="module-head">
+      <div class="module-num">4</div>
+      <div class="module-title">What to say in 60 seconds — script builder</div>
+    </div>
+    <p class="module-intro">A great slide doesn't substitute for a great spoken sentence. Most analysts ramble in the elevator with the CEO because they never wrote down what they'd say. So write it down. Use this fill-in-the-blanks scaffolding — it works for every audience.</p>
+
+    <div class="analogy">
+      <strong>Same finding, three audiences.</strong> The CEO wants the impact. The engineering team wants the cause. The marketing team wants the story they can repeat. Your script should change. Watch it adapt as you flip audiences below.
+    </div>
+
+    <div class="playground">
+      <div class="play-label">▸ Pick your audience — the tone hint updates</div>
+      <div class="audience-row" id="audRow">
+        <button class="aud-chip active" data-aud="ceo">🧑‍💼 CEO / Leadership</button>
+        <button class="aud-chip" data-aud="eng">🧑‍💻 Engineering team</button>
+        <button class="aud-chip" data-aud="mkt">📣 Marketing team</button>
+      </div>
+      <div class="aud-tip" id="audTip">
+        <span class="emo">💡</span>
+        <span><strong>Lead with the impact in money or %.</strong> Don't open with method. The CEO has 60 seconds and wants the verdict, not the journey. Keep numbers round. Drop jargon.</span>
+      </div>
+
+      <div class="script-stage">
+        <div class="script-line">
+          <span class="static-text">We looked at</span>
+          <input class="script-blank" id="b1" placeholder="what data + period">
+          <span class="static-text">to answer</span>
+          <input class="script-blank" id="b2" placeholder="the question">
+          <span class="static-text">.</span>
+        </div>
+        <div class="script-line">
+          <span class="static-text">We found that</span>
+          <input class="script-blank" id="b3" placeholder="the surprising finding">
+          <span class="static-text">.</span>
+        </div>
+        <div class="script-line">
+          <span class="static-text">This matters because</span>
+          <input class="script-blank" id="b4" placeholder="the so-what / impact">
+          <span class="static-text">.</span>
+        </div>
+        <div class="script-line">
+          <span class="static-text">I recommend</span>
+          <input class="script-blank" id="b5" placeholder="the specific action">
+          <span class="static-text">.</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap">
+        <button class="btn" onclick="buildScript()">Read it back to me</button>
+        <button class="btn btn-ghost" onclick="loadExample()">Fill with example</button>
+        <button class="btn btn-ghost" onclick="clearScript()">Clear</button>
+      </div>
+
+      <div class="script-preview" id="scriptOut"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 5: Slide critique -->
+<section class="module">
+  <div class="module-card">
+    <div class="module-head">
+      <div class="module-num">5</div>
+      <div class="module-title">Slide surgery — before &amp; after</div>
+    </div>
+    <p class="module-intro">A "bad" slide isn't ugly — it's <em>silent</em>. It makes the viewer do the work. A "good" slide says everything in three seconds even if the speaker disappears. Flip between the two versions and read the surgical notes.</p>
+
+    <div class="playground">
+      <div class="play-label">▸ Toggle between the two versions</div>
+      <div class="slide-toggle-row">
+        <button class="slide-tab bad active" onclick="showSlide('bad')">❌ Before — silent slide</button>
+        <button class="slide-tab good" onclick="showSlide('good')">✅ After — speaking slide</button>
+      </div>
+      <div id="slideStage"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 6: One-line headline practice -->
+<section class="module">
+  <div class="module-card">
+    <div class="module-head">
+      <div class="module-num">6</div>
+      <div class="module-title">Practice — write the one-sentence headline</div>
+    </div>
+    <p class="module-intro">If you can boil your finding into one tweet-length sentence, you've won. If you can't, you don't yet know what you found. Pick the best headline for the FreshFare chart below — there's exactly one that does the job.</p>
+
+    <div class="quiz">
+      <h4>The CEO sees this chart. What's the best headline above it?</h4>
+      <p>The chart below shows that complaints about "cold items arriving warm" rose 4× between May and August.</p>
+      <div class="quiz-chart">
+        <svg viewBox="0 0 320 130" class="chart-svg">
+          <g font-family="Plus Jakarta Sans" font-size="9" fill="rgba(255,255,255,0.7)">
+            <text x="160" y="13" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">"Cold items arrived warm" complaints / week</text>
+            <line x1="40" y1="105" x2="310" y2="105" stroke="rgba(255,255,255,0.2)"/>
+            <line x1="40" y1="25" x2="40" y2="105" stroke="rgba(255,255,255,0.2)"/>
+            <rect x="55" y="93" width="22" height="12" fill="#F5943E" rx="2"/>
+            <rect x="90" y="89" width="22" height="16" fill="#F5943E" rx="2"/>
+            <rect x="125" y="85" width="22" height="20" fill="#F5943E" rx="2"/>
+            <rect x="160" y="65" width="22" height="40" fill="#E87A2E" rx="2"/>
+            <rect x="195" y="50" width="22" height="55" fill="#E87A2E" rx="2"/>
+            <rect x="230" y="42" width="22" height="63" fill="#E87A2E" rx="2"/>
+            <rect x="265" y="48" width="22" height="57" fill="#E87A2E" rx="2"/>
+            <text x="66" y="120" text-anchor="middle">May</text>
+            <text x="101" y="120" text-anchor="middle">Jun</text>
+            <text x="136" y="120" text-anchor="middle">Jun</text>
+            <text x="171" y="120" text-anchor="middle">Jul</text>
+            <text x="206" y="120" text-anchor="middle">Jul</text>
+            <text x="241" y="120" text-anchor="middle">Aug</text>
+            <text x="276" y="120" text-anchor="middle">Aug</text>
+          </g>
+        </svg>
+      </div>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-correct="0">A. "Complaint volume over time, May–August"</button>
+        <button class="quiz-opt" data-correct="0">B. "There was a noticeable change in complaints during the summer"</button>
+        <button class="quiz-opt" data-correct="1">C. "Cold-chain complaints quadrupled in June — a fixable, isolated cause"</button>
+        <button class="quiz-opt" data-correct="0">D. "Q3 saw various interesting patterns in customer feedback data"</button>
+      </div>
+      <div class="quiz-feedback" id="qf"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Summary -->
+<div class="summary">
+  <h3>What you just practised</h3>
+  <p>You moved from "showing data" to "telling someone what to do about it" — the single biggest career skill in analytics. The same pattern works for a research paper, a board memo or a Slack message. Layer your chart, sequence your story, write your line.</p>
+  <div class="summary-grid">
+    <div class="summary-item"><h5>Annotate in layers</h5><p>Title → highlight → callout → takeaway. Four switches transform a silent chart into a slide that talks.</p></div>
+    <div class="summary-item"><h5>Use the 5-beat arc</h5><p>Context → Question → Finding → So What → Recommendation. Never skip a beat — especially the last two.</p></div>
+    <div class="summary-item"><h5>Write the script first</h5><p>Four sentences. We looked. We found. It matters. I recommend. Write it BEFORE you open the slide editor.</p></div>
+    <div class="summary-item"><h5>Adapt to the room</h5><p>CEO wants impact. Engineers want cause. Marketing wants the soundbite. Same finding, three openings.</p></div>
+    <div class="summary-item"><h5>Earn your title</h5><p>If your slide title is "Sales by month", you've left the story on the cutting-room floor. Make a claim, not a description.</p></div>
+    <div class="summary-item"><h5>One-sentence test</h5><p>If you can't compress your finding into one tweetable line, you haven't found it yet. Keep digging.</p></div>
+  </div>
+</div>
+
+<footer>MokshPath — AI-Native Summer Series · Lesson 04 of 04 · Built for learners from every background.</footer>
+
+<script>
+/* ─────────── Module 2 — annotated chart ─────────── */
+const annState={title:false,highlight:false,callout:false,takeaway:false};
+
+const baseBars=[
+  {label:'Apr',v:58,issue:false},
+  {label:'May',v:62,issue:false},
+  {label:'Jun',v:60,issue:false},
+  {label:'Jul',v:42,issue:true},
+  {label:'Aug',v:38,issue:true},
+  {label:'Sep',v:49,issue:false},
+];
+
+function drawAnnChart(){
+  const svg=document.getElementById('annChart');
+  const W=600,H=320,pad={t:50,r:30,b:60,l:55};
+  const innerW=W-pad.l-pad.r,innerH=H-pad.t-pad.b;
+  const maxV=70;
+  let g='';
+  // y-axis
+  for(let v=0;v<=maxV;v+=20){
+    const y=pad.t+innerH-(v/maxV)*innerH;
+    g+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="#E5DDD4" stroke-dasharray="2,3"/>`;
+    g+=`<text x="${pad.l-8}" y="${y+3}" text-anchor="end" font-size="10" fill="#9597A6">${v}%</text>`;
+  }
+  // bars
+  const bw=innerW/baseBars.length*0.6;
+  const gap=innerW/baseBars.length;
+  baseBars.forEach((b,i)=>{
+    const x=pad.l+i*gap+(gap-bw)/2;
+    const h=(b.v/maxV)*innerH;
+    const y=pad.t+innerH-h;
+    let fill='#6B6D7B';
+    if(annState.highlight){
+      fill=b.issue?'#E87A2E':'#D6D2CB';
+    }
+    g+=`<rect x="${x}" y="${y}" width="${bw}" height="${h}" fill="${fill}" rx="3"/>`;
+    g+=`<text x="${x+bw/2}" y="${pad.t+innerH+15}" text-anchor="middle" font-size="10" fill="#6B6D7B" font-weight="600">${b.label}</text>`;
+    g+=`<text x="${x+bw/2}" y="${y-4}" text-anchor="middle" font-size="9" fill="#9597A6">${b.v}%</text>`;
+  });
+  // title
+  if(annState.title){
+    g+=`<text x="${pad.l}" y="25" font-size="15" font-weight="800" fill="#2B2D42" font-family="DM Serif Display">5★ rating share drops 20pts when the cold chain breaks</text>`;
+    g+=`<text x="${pad.l}" y="40" font-size="10" fill="#9597A6">FreshFare Grocery, weekly 5★ rating share, April–September 2026</text>`;
+  } else {
+    g+=`<text x="${pad.l}" y="32" font-size="12" fill="#9597A6">5★ rating share by month</text>`;
+  }
+  // callout — points to July and August bars
+  if(annState.callout){
+    const julX=pad.l+3*gap+gap/2;
+    const julY=pad.t+innerH-(42/maxV)*innerH;
+    const augX=pad.l+4*gap+gap/2;
+    // arrow + label
+    g+=`<line x1="${julX+50}" y1="${julY-30}" x2="${julX+5}" y2="${julY-5}" stroke="#E87A2E" stroke-width="1.5" stroke-dasharray="3,2"/>`;
+    g+=`<polygon points="${julX+5},${julY-5} ${julX+13},${julY-12} ${julX+10},${julY-3}" fill="#E87A2E"/>`;
+    g+=`<rect x="${julX+45}" y="${julY-50}" width="170" height="32" fill="#FFF6E8" stroke="#E87A2E" rx="6"/>`;
+    g+=`<text x="${julX+53}" y="${julY-37}" font-size="10" font-weight="700" fill="#D06A20">Heatwave: 11–28 July</text>`;
+    g+=`<text x="${julX+53}" y="${julY-25}" font-size="9" fill="#2B2D42">Cold packs ran out at 4 dark stores</text>`;
+    // shaded background for issue period
+    const sx=pad.l+3*gap+(gap-bw)/2-4;
+    const sw=2*gap;
+    g+=`<rect x="${sx}" y="${pad.t}" width="${sw}" height="${innerH}" fill="#E87A2E" opacity="0.06" rx="3"/>`;
+  }
+  // takeaway
+  if(annState.takeaway){
+    g+=`<rect x="${pad.l}" y="${H-pad.b+25}" width="${innerW}" height="22" fill="#FFF6E8" stroke="#F5D9B5" rx="5"/>`;
+    g+=`<text x="${pad.l+10}" y="${H-pad.b+40}" font-size="11" font-weight="700" fill="#D06A20">→ Recommendation: Add backup cold packs to the 4 stores before next heatwave (₹ 8L, 2-week project).</text>`;
+  }
+  svg.innerHTML=g;
+
+  // insight text
+  const onCount=Object.values(annState).filter(Boolean).length;
+  const insightEl=document.getElementById('annInsight');
+  const msgs={
+    0:'<strong>You\'re showing the raw chart.</strong> A viewer can guess that something happened with cold-chain — but they have to do the work. Add at least the title and the highlight to lift them out of that work.',
+    1:'<strong>One annotation makes a big difference.</strong> But you\'ve only set the stage. The viewer can see <em>what</em>, but doesn\'t know <em>why</em> or <em>so what</em>.',
+    2:'<strong>Now we\'re cooking.</strong> The bars say what; the colour says where to look. Add a callout to explain the cause.',
+    3:'<strong>Almost there.</strong> You\'ve got the story — what, why, where. One more layer: tell them what to DO.',
+    4:'<strong>Boom — this slide can stand alone.</strong> If you got hit by a bus on the way to the meeting, your slide would still close the deal. That\'s the bar.'
+  };
+  insightEl.innerHTML=msgs[onCount];
+}
+
+function toggleAnn(key){
+  annState[key]=!annState[key];
+  document.querySelector(`.toggle-row[data-key="${key}"]`).classList.toggle('on',annState[key]);
+  drawAnnChart();
+}
+drawAnnChart();
+
+/* ─────────── Module 3 — narrative cards ─────────── */
+const allCards=[
+  {id:'context',pos:1,emoji:'🎬',text:'Context: FreshFare\'s 5-star rating share fell from 64% in Q2 to 49% in Q3 — the first quarterly drop since launch.'},
+  {id:'question',pos:2,emoji:'❓',text:'Question: Is the drop concentrated in one product category, one geography, or one time window?'},
+  {id:'finding',pos:3,emoji:'🔍',text:'Finding: 78% of the drop comes from "cold items arrived warm" complaints in July–August, in 4 of 30 dark stores.'},
+  {id:'sowhat',pos:4,emoji:'💥',text:'So what: At current churn rates, this kicks ~12,000 customers off the platform — ~₹3.2 Cr in annualised GMV.'},
+  {id:'action',pos:5,emoji:'🎯',text:'Action: Install backup cold-pack inventory in those 4 stores before May 2027. Budget ₹8L, payback in 90 days.'}
+];
+
+let pool=[...allCards].sort(()=>Math.random()-0.5);
+let ordered=[];
+
+function renderNarrative(){
+  const poolEl=document.getElementById('cardPool');
+  const ordEl=document.getElementById('cardOrder');
+  poolEl.innerHTML=pool.length?pool.map(c=>
+    `<div class="story-card" onclick="pickCard('${c.id}')"><span class="badge">?</span><span>${c.emoji} ${c.text}</span></div>`
+  ).join(''):'<div class="story-card placeholder">All cards placed →</div>';
+  if(ordered.length===0){
+    ordEl.innerHTML='<div class="story-card placeholder">Drop cards here in story order, 1 → 5</div>';
+  } else {
+    ordEl.innerHTML=ordered.map((c,i)=>
+      `<div class="story-card in-order" onclick="unpickCard('${c.id}')"><span class="badge">${i+1}</span><span>${c.emoji} ${c.text}</span></div>`
+    ).join('');
+  }
+}
+
+function pickCard(id){
+  const idx=pool.findIndex(c=>c.id===id);
+  if(idx<0) return;
+  ordered.push(pool[idx]);
+  pool.splice(idx,1);
+  renderNarrative();
+}
+function unpickCard(id){
+  const idx=ordered.findIndex(c=>c.id===id);
+  if(idx<0) return;
+  pool.push(ordered[idx]);
+  ordered.splice(idx,1);
+  renderNarrative();
+}
+function checkNarrative(){
+  const ins=document.getElementById('narrativeInsight');
+  if(ordered.length<5){
+    ins.innerHTML='<strong>Place all 5 cards first.</strong> A story without an ending leaves the room asking "and?".'; return;
+  }
+  const correct=ordered.every((c,i)=>c.pos===i+1);
+  if(correct){
+    ins.innerHTML='✅ <strong>Perfect — that\'s the analytical detective arc.</strong> Start with the world the listener cares about (context), then narrow to a sharp question, then the finding, then the consequence, then the action. Even a 30-second elevator pitch fits this shape.';
+  } else {
+    const wrongAt=ordered.findIndex((c,i)=>c.pos!==i+1);
+    ins.innerHTML=`❌ <strong>Close, but card #${wrongAt+1} is out of place.</strong> Common mistake: leading with the finding before the context, or ending on "so what" without an action. Try again — the order is Context → Question → Finding → So-What → Action.`;
+  }
+}
+function resetNarrative(){
+  pool=[...allCards].sort(()=>Math.random()-0.5);
+  ordered=[];
+  renderNarrative();
+  document.getElementById('narrativeInsight').innerHTML='<strong>Tip:</strong> Start with what the reader cares about (the business setup), end with what they should do. The "finding" alone is never enough — sandwich it between context and action.';
+}
+renderNarrative();
+
+/* ─────────── Module 4 — script builder ─────────── */
+const audMessages={
+  ceo:{
+    emoji:'💡',
+    tip:'<strong>Lead with the impact in money or %.</strong> Don\'t open with method. The CEO has 60 seconds and wants the verdict, not the journey. Keep numbers round. Drop jargon.',
+    example:{
+      b1:'Q3 rating data across all 30 dark stores',
+      b2:'why our 5★ share fell 15 points',
+      b3:'78% of the drop comes from cold-chain failures in 4 stores during July',
+      b4:'it puts ₹3.2 Cr of annualised GMV at risk',
+      b5:'we install backup cold packs in those 4 stores — ₹8 lakh, two-week project'
+    }
+  },
+  eng:{
+    emoji:'🔧',
+    tip:'<strong>Lead with the mechanism.</strong> Engineers want to know what broke and where in the system. Show the data path, name the SKUs, name the stores. Numbers can be precise — they\'ll catch a rounded one.',
+    example:{
+      b1:'order × complaint × temperature-log joins from July 1 to August 31',
+      b2:'whether the rating drop maps to specific store IDs',
+      b3:'stores BLR-04, HYD-02, DEL-07 and PNQ-01 each show >300 cold-pack-out events correlated with 1★ ratings within 24h',
+      b4:'it means the spoilage is operational not algorithmic — no model retraining needed',
+      b5:'we add a low-cold-pack alert to the inventory service and ship by next sprint'
+    }
+  },
+  mkt:{
+    emoji:'📣',
+    tip:'<strong>Lead with the customer story.</strong> Marketing turns insight into messaging. Use customer words ("our berries felt warm"). Give them one fact they can repeat on a podcast.',
+    example:{
+      b1:'every Q3 customer review that mentioned temperature, freshness or spoilage',
+      b2:'whether unhappy customers share a common complaint we can address',
+      b3:'94% of new 1★ reviews mention "warm" or "spoiled" — almost none mention price, app or delivery time',
+      b4:'we have a single, fixable, brand-safe story to tell — not ten messy ones',
+      b5:'we run a "We heard you, here\'s what changed" campaign once the cold-pack fix lands'
+    }
+  }
+};
+
+let currentAud='ceo';
+
+function setAudience(aud){
+  currentAud=aud;
+  document.querySelectorAll('.aud-chip').forEach(c=>c.classList.toggle('active',c.dataset.aud===aud));
+  const m=audMessages[aud];
+  document.getElementById('audTip').innerHTML=`<span class="emo">${m.emoji}</span><span>${m.tip}</span>`;
+}
+document.querySelectorAll('.aud-chip').forEach(c=>c.addEventListener('click',()=>setAudience(c.dataset.aud)));
+
+function loadExample(){
+  const ex=audMessages[currentAud].example;
+  ['b1','b2','b3','b4','b5'].forEach(k=>{document.getElementById(k).value=ex[k];});
+}
+function clearScript(){
+  ['b1','b2','b3','b4','b5'].forEach(k=>{document.getElementById(k).value='';});
+  document.getElementById('scriptOut').classList.remove('show');
+}
+function buildScript(){
+  const vals=['b1','b2','b3','b4','b5'].map(k=>document.getElementById(k).value.trim());
+  const out=document.getElementById('scriptOut');
+  if(vals.some(v=>!v)){
+    out.classList.add('show');
+    out.innerHTML='<strong>Fill all four sentences first.</strong> A speech with a blank in it sounds exactly like a speech with a blank in it. Try "Fill with example" if you need a starting point.';
+    return;
+  }
+  out.classList.add('show');
+  out.innerHTML=`We looked at <strong>${vals[0]}</strong> to answer <strong>${vals[1]}</strong>. We found that <strong>${vals[2]}</strong>. This matters because <strong>${vals[3]}</strong>. I recommend <strong>${vals[4]}</strong>.`;
+}
+
+/* ─────────── Module 5 — slide critique ─────────── */
+const slides={
+  bad:{
+    title:'Sales by Month',
+    chart:`<svg viewBox="0 0 400 180" class="chart-svg"><g font-family="Plus Jakarta Sans" font-size="9" fill="#9597A6">
+      <text x="200" y="13" text-anchor="middle" font-size="11" font-weight="600" fill="#6B6D7B">Monthly orders</text>
+      <line x1="40" y1="150" x2="380" y2="150" stroke="#E5DDD4"/>
+      <line x1="40" y1="30" x2="40" y2="150" stroke="#E5DDD4"/>
+      <rect x="60" y="80" width="30" height="70" fill="#6B6D7B" rx="2"/>
+      <rect x="100" y="75" width="30" height="75" fill="#6B6D7B" rx="2"/>
+      <rect x="140" y="70" width="30" height="80" fill="#6B6D7B" rx="2"/>
+      <rect x="180" y="95" width="30" height="55" fill="#6B6D7B" rx="2"/>
+      <rect x="220" y="105" width="30" height="45" fill="#6B6D7B" rx="2"/>
+      <rect x="260" y="100" width="30" height="50" fill="#6B6D7B" rx="2"/>
+      <rect x="300" y="78" width="30" height="72" fill="#6B6D7B" rx="2"/>
+      <rect x="340" y="65" width="30" height="85" fill="#6B6D7B" rx="2"/>
+      <text x="75" y="165" text-anchor="middle">M1</text><text x="115" y="165" text-anchor="middle">M2</text>
+      <text x="155" y="165" text-anchor="middle">M3</text><text x="195" y="165" text-anchor="middle">M4</text>
+      <text x="235" y="165" text-anchor="middle">M5</text><text x="275" y="165" text-anchor="middle">M6</text>
+      <text x="315" y="165" text-anchor="middle">M7</text><text x="355" y="165" text-anchor="middle">M8</text>
+    </g></svg>`,
+    issues:[
+      ['❌','Title is a description, not a claim. "Sales by month" tells me nothing.'],
+      ['❌','Every bar is the same colour. My eyes have no idea where to look.'],
+      ['❌','No takeaway, no annotation. If the speaker walks out, the slide dies.'],
+      ['❌','X-axis labels (M1, M2…) force the audience to translate. Use real months.']
+    ]
+  },
+  good:{
+    title:'July–August dip was 100% cold-chain — fix is small and fast',
+    chart:`<svg viewBox="0 0 400 180" class="chart-svg"><g font-family="Plus Jakarta Sans" font-size="9" fill="#9597A6">
+      <text x="200" y="13" text-anchor="middle" font-size="11" font-weight="700" fill="#2B2D42">Monthly orders — note the 35% July dip</text>
+      <line x1="40" y1="150" x2="380" y2="150" stroke="#E5DDD4"/>
+      <line x1="40" y1="30" x2="40" y2="150" stroke="#E5DDD4"/>
+      <rect x="60" y="80" width="30" height="70" fill="#D6D2CB" rx="2"/>
+      <rect x="100" y="75" width="30" height="75" fill="#D6D2CB" rx="2"/>
+      <rect x="140" y="70" width="30" height="80" fill="#D6D2CB" rx="2"/>
+      <rect x="180" y="95" width="30" height="55" fill="#E87A2E" rx="2"/>
+      <rect x="220" y="105" width="30" height="45" fill="#E87A2E" rx="2"/>
+      <rect x="260" y="100" width="30" height="50" fill="#E87A2E" rx="2"/>
+      <rect x="300" y="78" width="30" height="72" fill="#D6D2CB" rx="2"/>
+      <rect x="340" y="65" width="30" height="85" fill="#D6D2CB" rx="2"/>
+      <text x="75" y="165" text-anchor="middle" fill="#6B6D7B">Apr</text>
+      <text x="115" y="165" text-anchor="middle" fill="#6B6D7B">May</text>
+      <text x="155" y="165" text-anchor="middle" fill="#6B6D7B">Jun</text>
+      <text x="195" y="165" text-anchor="middle" font-weight="700" fill="#E87A2E">Jul</text>
+      <text x="235" y="165" text-anchor="middle" font-weight="700" fill="#E87A2E">Aug</text>
+      <text x="275" y="165" text-anchor="middle" font-weight="700" fill="#E87A2E">Sep</text>
+      <text x="315" y="165" text-anchor="middle" fill="#6B6D7B">Oct</text>
+      <text x="355" y="165" text-anchor="middle" fill="#6B6D7B">Nov</text>
+      <rect x="178" y="34" width="120" height="28" fill="#FFF6E8" stroke="#E87A2E" rx="5"/>
+      <text x="184" y="46" font-size="9" font-weight="700" fill="#D06A20">Heatwave</text>
+      <text x="184" y="56" font-size="8" fill="#6B6D7B">cold packs ran out</text>
+    </g></svg>`,
+    takeaway:'<strong>Takeaway:</strong> 4 dark stores need backup cold packs before May 2027. Cost ₹8L, payback in 90 days.',
+    fixes:[
+      ['✓','Title makes a claim ("cold-chain", "small and fast"). Reader knows what the slide is FOR.'],
+      ['✓','Only the 3 problem months are coloured. The eye knows where to land in 1 second.'],
+      ['✓','Annotation explains the cause inline. Slide reads itself without the speaker.'],
+      ['✓','Takeaway box at the bottom. The action is explicit, with numbers.']
+    ]
+  }
+};
+
+function renderSlide(which){
+  const s=slides[which];
+  const stage=document.getElementById('slideStage');
+  let html=`<div class="slide-frame ${which}"><h5>${s.title}</h5>${s.chart}`;
+  if(s.takeaway){html+=`<div class="takeaway">${s.takeaway}</div>`;}
+  html+=`</div><div class="slide-issues">`;
+  const items=which==='bad'?s.issues:s.fixes;
+  items.forEach(([ic,txt])=>{
+    html+=`<div class="slide-issue ${which==='good'?'slide-fix':''}"><span class="ic">${ic}</span><span>${txt}</span></div>`;
+  });
+  html+='</div>';
+  stage.innerHTML=html;
+}
+function showSlide(which){
+  document.querySelectorAll('.slide-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelector(`.slide-tab.${which}`).classList.add('active');
+  renderSlide(which);
+}
+renderSlide('bad');
+
+/* ─────────── Module 6 — quiz ─────────── */
+document.querySelectorAll('.quiz-opt').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.quiz-opt').forEach(b=>b.classList.remove('correct','wrong'));
+    const correct=btn.dataset.correct==='1';
+    btn.classList.add(correct?'correct':'wrong');
+    const fb=document.getElementById('qf'); fb.classList.add('show');
+    const explanations={
+      'A':'Descriptive title — it tells me <em>what the chart is</em>, not <em>what to do about it</em>. A title should make a claim, not name a topic.',
+      'B':'Vague hedging. "Noticeable change" and "summer" — the CEO can\'t act on this. Strong headlines name the size, the cause and the timeframe.',
+      'C':'✅ <strong>Yes — this is the headline.</strong> Three jobs done in one breath: it states the magnitude (<em>quadrupled</em>), the cause (<em>cold-chain</em>), and the optimistic frame (<em>fixable, isolated</em>). The CEO already knows what to ask next.',
+      'D':'Wallpaper. "Various interesting patterns" is what people write when they don\'t know what they found. Headlines that say nothing are worse than no headline.'
+    };
+    const letter=btn.textContent.trim().charAt(0);
+    const fb_html=correct
+      ? explanations.C+' <br><br><strong>Pattern:</strong> Strong headlines = Magnitude + Mechanism + Mood (a forward-looking frame). Practice writing yours this way.'
+      : explanations[letter]+' <br><br>Try again — only one option does all three jobs (magnitude, cause, frame).';
+    fb.innerHTML=fb_html;
+  });
+});
+</script>
+
+</body>
+</html>
